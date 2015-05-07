@@ -16,6 +16,19 @@
     background-color: yellow !important;
     word-wrap:break-word;
 }
+a.noPermisos {
+
+    cursor:pointer;
+}
+
+a.diaFestivo {
+   
+    cursor:pointer;
+}
+
+a.laborForzosa {
+    cursor:pointer;
+}
 
 body {
     /*padding-top: 50px;*/

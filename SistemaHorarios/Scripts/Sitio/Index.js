@@ -3,6 +3,8 @@ $(function () {
     var $body = $("body");
     //Declaración de var 
     var $miHistorial = $("#miHistLink");
+    var $contenedorDetalle = $("#contenedorDetalle");
+    var $modalDetalle = $("#modalDetalle");
     var $contenedor = $("#contenedor");
     var $linkHistorial = $("#histLink");
     var $linkUsuarios = $("#ursLink");
@@ -12,6 +14,7 @@ $(function () {
     var $calendario = $("#calendarioAct");
     var url = {
         cargaFechas: "/Configuracion/Fechas",
+        cargaDetalleFecha: "/PanelControl/DetalleFecha/",
     }
     var calendarioConfig = function () {
         return {
@@ -23,20 +26,23 @@ $(function () {
             loading: function (cargando) {
 
             },
+            
             lang: "es",
-            selectable: true,
-            select: function (start, end) {
-
-            },
+            
             timeFormat: "H(:mm)",
             displayEventEnd: true,
             events: url.cargaFechas,
             eventClick: function (calEvent, jsEvent, view) {
-                
+                cargaModalDetalle(calEvent.id);
             }
         }
     }
     //Declaración de fun
+    var cargaModalDetalle = function (idEvento) {
+        $contenedorDetalle.load(url.cargaDetalleFecha + idEvento, function () {
+            $modalDetalle.modal("show");
+        });
+    }
     var cargaMiHistorial = function () {
         $contenedor.load("/PanelControl/MiHistorial");
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-
+//Servando, no implementes... no funciona :( por ahora
 namespace SERVICIOS.ValidacionesPers
 {
     public class NombreRepetido : ValidationAttribute

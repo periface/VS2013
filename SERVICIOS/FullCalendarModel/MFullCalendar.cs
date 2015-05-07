@@ -17,5 +17,6 @@ namespace SERVICIOS.FullCalendarModel
         public DateTime fechaInicio { get; set; }
         public DateTime fechaFin { get; set; }
         public string descripcion { get; set; }
+        public bool ignorarHorario { get; set; }
     }
 }

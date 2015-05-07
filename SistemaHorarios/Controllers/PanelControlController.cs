@@ -385,7 +385,24 @@ namespace SistemaHorarios.Controllers
             return false;
         }
         public bool esDiaLaboral() {
-            if (DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday) {
+            var actual = DateTime.Now;
+            if (actual.DayOfWeek == DayOfWeek.Saturday || actual.DayOfWeek == DayOfWeek.Sunday) {
+                var diasLaborales = _Fechas.CargarFechas(a=>a.tipo==2);
+                foreach (var item in diasLaborales.Where(a => a.fechaInicio.ToShortDateString() == actual.ToShortDateString()
+                && a.fechaFin.ToShortDateString() == actual.ToShortDateString())) 
+                {
+                    var inicio = item.fechaInicio;
+                    var fin = item.fechaFin;
+                    if (actual >= inicio && actual <= fin)
+                    {
+                        if (item.ignorarHorario)
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                   
+                }
                 return false;
             }
             return true;
@@ -415,25 +432,7 @@ namespace SistemaHorarios.Controllers
             }
             if (!esDiaLaboral())
             {
-                if (esDiaForzoso())
-                {
-
-                    if (DateTime.Now.TimeOfDay >= categoria.hraSalAsignada)
-                    {
-                        return "tarde();";
-                    }
-                    if (DateTime.Now.TimeOfDay <= categoria.hraEntAsignada)
-                    {
-                        return "temprano();";
-                    }
-                    //Patron de inyeccion de dependencias (SOLUCIONA: NO HACER LLAMADAS A LA BASE DE DATOS DENTRO DEL HELPER)
-                    if (YaChecoEntrada(empleado, registro.ToList(), categoria.hraEntAsignada, categoria.hraSalAsignada))
-                    {
-                        return "existe();";
-                    }
-                    _Historial.GuardarHistorial(nuevoHistorial);
-                    return "checkado();";
-                }
+                
                 return "noEsDiaLaboral();";
             }
             else

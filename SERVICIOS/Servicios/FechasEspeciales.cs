@@ -73,7 +73,8 @@ namespace SERVICIOS.Servicios
                         title = item.titulo,
                         fechaFin = stringFechaFin,
                         fechaInicio = stringFechaInicio,
-                        descripcion = item.descripcion
+                        descripcion = item.descripcion,
+                        ignorarHorario = item.ignorarHorario.Value,
                     });
 
                 }
@@ -104,6 +105,7 @@ namespace SERVICIOS.Servicios
                         fechaFin = stringFechaFin,
                         fechaInicio = stringFechaInicio,
                         descripcion = item.descripcion,
+                        ignorarHorario = item.ignorarHorario.Value
                     });
                 }
             }

@@ -78,6 +78,9 @@
     <Compile Include="catHistorial.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="catPermisos.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="C__MigrationHistory.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>

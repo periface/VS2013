@@ -15,6 +15,7 @@ namespace SistemaHorarios.Controllers
         private Empleado _Empleado = new Empleado();
         private Categoria _Categoria = new Categoria();
         private FechasEspeciales _Fechas = new FechasEspeciales();
+        private Permisos _Permisos = new Permisos();
         //
         // GET: /PanelControl/
         public ActionResult Index()
@@ -39,11 +40,11 @@ namespace SistemaHorarios.Controllers
                 var empleado = _Empleado.CargarEmpleados(a => a.noEmpleado == id).SingleOrDefault();
                 var idAsp = User.Identity.GetUserId();
                 var empleadoAsp = _Empleado.CargarEmpleados(a => a.AspNetUsers.Id == idAsp).SingleOrDefault();
-                if (CheckEmpleado(empleado,empleadoAsp))
+                if (CheckEmpleado(empleado, empleadoAsp))
                 {
-                    
-                var historial= _Historial.CargaHistorial(a => a.noEmpleado == empleado.noEmpleado);
-                    HorasTrabajadas(empleado,historial);
+
+                    var historial = _Historial.CargaHistorial(a => a.noEmpleado == empleado.noEmpleado);
+                    HorasTrabajadas(empleado, historial);
                     return View(empleado);
                 }
                 else
@@ -59,7 +60,7 @@ namespace SistemaHorarios.Controllers
                 {
 
                     var historial = _Historial.CargaHistorial(a => a.noEmpleado == empleado.noEmpleado);
-                    HorasTrabajadas(empleado,historial);
+                    HorasTrabajadas(empleado, historial);
                     return View(empleado);
                 }
 
@@ -87,20 +88,22 @@ namespace SistemaHorarios.Controllers
                     model = _Historial.CargaHistorial(a => a.catEmpleado.noEmpleado.ToString() == usuario
                         || a.catEmpleado.nomEmpleado.ToUpper() == usuario.ToUpper());
                 }
-                else {
+                else
+                {
                     model = _Historial.CargaHistorial();
                 }
                 if (fechaInicio == null || fechaInicio == null)
                 {
                     var query = model;
                     return PartialView("tabla", query);
-                    
+
                 }
-                else {
+                else
+                {
                     var query = model.Where(a => a.fechaRegistro >= fechaInicio && a.fechaRegistro <= fechaFin);
                     return PartialView("tabla", query);
                 }
-                
+
             }
             else
             {
@@ -145,17 +148,7 @@ namespace SistemaHorarios.Controllers
             var historial = _Historial.CargaHistorial(a => a.catEmpleado.AspNetUsers.Id == id);
             return View(historial);
         }
-        public ActionResult AgendarPermiso()
-        {
-            //TODO 
-            return View();
-        }
-        [HttpPost]
-        public ActionResult AgendarPermiso(FormCollection forms)
-        {
-            //TODO
-            return View();
-        }
+        
         public ActionResult Perfil()
         {
             var id = User.Identity.GetUserId();
@@ -166,8 +159,10 @@ namespace SistemaHorarios.Controllers
             }
             return View();
         }
-        public ActionResult FormCalendario(string id) {
-            if (id != "undefined") {
+        public ActionResult FormCalendario(string id)
+        {
+            if (id != "undefined")
+            {
                 if (!string.IsNullOrEmpty(id))
                 {
                     ViewBag.id = id;
@@ -176,21 +171,24 @@ namespace SistemaHorarios.Controllers
             return View();
         }
         //TODO: Funcion con solo fechas de historial
-        public ActionResult Calendario(string id) {
+        public ActionResult Calendario(string id)
+        {
             if (string.IsNullOrEmpty(id))
             {
                 var historial = _Historial.CargarFechas();
-                return Json(historial,JsonRequestBehavior.AllowGet);
+                return Json(historial, JsonRequestBehavior.AllowGet);
             }
-            else {
+            else
+            {
                 int numero;
-                var result = int.TryParse(id,out numero);
+                var result = int.TryParse(id, out numero);
                 if (result)
                 {
                     var historial = _Historial.CargarFechas(a => a.noEmpleado == numero || a.catEmpleado.nomEmpleado == id);
                     return Json(historial, JsonRequestBehavior.AllowGet);
                 }
-                else {
+                else
+                {
                     var historial = _Historial.CargarFechas(a => a.catEmpleado.nomEmpleado == id);
                     return Json(historial, JsonRequestBehavior.AllowGet);
                 }
@@ -224,8 +222,9 @@ namespace SistemaHorarios.Controllers
             var registro = historial.Where(a => a.fechaRegistro.ToShortDateString() == actual).SingleOrDefault();
             var empleado = _Empleado.CargarEmpleados(e => e.noEmpleado == id).SingleOrDefault();
             var categoria = _Categoria.CargarCategorias(a => a.idCategoria == empleado.tipoEmpleado).SingleOrDefault();
-            if (registro != null) {
-                
+            if (registro != null)
+            {
+
                 //Patron de inyeccion de dependencias (SOLUCIONA: NO HACER LLAMADAS A LA BASE DE DATOS DENTRO DEL HELPER)
                 if (YaChecoSalida(empleado, historial.ToList(), categoria.hraEntAsignada, categoria.hraSalAsignada))
                 {
@@ -238,20 +237,38 @@ namespace SistemaHorarios.Controllers
             return JavaScript("noRegistroEntrada()");
         }
         [HttpGet]
-        public ActionResult DetalleFecha(int id) {
-            var detalle = _Fechas.CargarFechas(a=>a.id==id).SingleOrDefault();
-            if (detalle != null) {
+        public ActionResult DetalleFecha(int id)
+        {
+            var detalle = _Fechas.CargarFechas(a => a.id == id).SingleOrDefault();
+            if (detalle != null)
+            {
                 return View(detalle);
             }
             ViewBag.error = "No se encontro la fecha seleccionada";
             return View("ErrorNoLayout");
+        }
+        public ActionResult AgendarPermiso()
+        {
+            if (permitePermisos()) {
+                return View();
+            }
+            else{
+                ViewBag.error = "Este dia no se permiten permisos";
+                return PartialView("ErrorNoLayout");
+            }
+        }
+        [HttpPost]
+        public ActionResult AgendarPermiso(MPermiso model)
+        {
+
+            return View();
         }
         #region Helpers
         /// <summary>
         /// Genera un viewbag con el numero total de horas trabajadas
         /// </summary>
         /// <param name="empleado"></param>
-        public void HorasTrabajadas(MEmpleado empleado,IEnumerable<MHistorial> historial)
+        public void HorasTrabajadas(MEmpleado empleado, IEnumerable<MHistorial> historial)
         {
             if (empleado != null)
             {
@@ -275,25 +292,27 @@ namespace SistemaHorarios.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns>bool</returns>
-        public bool YaChecoEntrada(MEmpleado empleado,List<MHistorial> registros, TimeSpan? horaEntrada,TimeSpan?horaSalida)
+        public bool YaChecoEntrada(MEmpleado empleado, List<MHistorial> registros, TimeSpan? horaEntrada, TimeSpan? horaSalida)
         {
-            IEnumerable<MHistorial> historial=null;
+            IEnumerable<MHistorial> historial = null;
             MHistorial registro = null;
-            if (registros != null) {
+            if (registros != null)
+            {
 
                 if (registros.Count > 0)
                 {
                     historial = registros.Where(a => a.noEmpleado == empleado.noEmpleado);
                     registro = historial.Where(a => a.hraEntrada.TimeOfDay >= horaEntrada.Value
-                        && a.hraEntrada.TimeOfDay<=horaSalida.Value 
-                        || a.fechaRegistro.ToShortDateString()==DateTime.Now.ToShortDateString()).SingleOrDefault();
-                    if (registro == null) {
-                        registro = historial.Where(a => a.hraEntrada.TimeOfDay <= horaEntrada.Value 
+                        && a.hraEntrada.TimeOfDay <= horaSalida.Value
+                        || a.fechaRegistro.ToShortDateString() == DateTime.Now.ToShortDateString()).SingleOrDefault();
+                    if (registro == null)
+                    {
+                        registro = historial.Where(a => a.hraEntrada.TimeOfDay <= horaEntrada.Value
                             || a.fechaRegistro.ToShortDateString() == DateTime.Now.ToShortDateString()).SingleOrDefault();
                     }
                 }
             }
-            
+
             if (registro != null)
             {
                 if (registro.hraEntrada != null)
@@ -322,7 +341,7 @@ namespace SistemaHorarios.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns>bool</returns>
-        public bool YaChecoSalida(MEmpleado empleado,List<MHistorial> registros,TimeSpan? horaEntrada, TimeSpan? horaSalida)
+        public bool YaChecoSalida(MEmpleado empleado, List<MHistorial> registros, TimeSpan? horaEntrada, TimeSpan? horaSalida)
         {
             IEnumerable<MHistorial> historial = null;
             MHistorial registro = null;
@@ -332,14 +351,14 @@ namespace SistemaHorarios.Controllers
                 if (registros.Count > 0)
                 {
                     historial = registros.Where(a => a.noEmpleado == empleado.noEmpleado);
-                    registro = historial.Where(a =>a.hraSalida.HasValue 
-                        && a.hraSalida.Value.TimeOfDay <= horaSalida.Value 
-                        && a.hraSalida.Value.TimeOfDay>=horaEntrada 
+                    registro = historial.Where(a => a.hraSalida.HasValue
+                        && a.hraSalida.Value.TimeOfDay <= horaSalida.Value
+                        && a.hraSalida.Value.TimeOfDay >= horaEntrada
                         && a.fechaRegistro.ToShortDateString() == DateTime.Now.ToShortDateString()).SingleOrDefault();
                     if (registro == null)
                     {
-                        registro = historial.Where(a => a.hraSalida.HasValue 
-                            && a.hraSalida.Value.TimeOfDay >= horaSalida.Value 
+                        registro = historial.Where(a => a.hraSalida.HasValue
+                            && a.hraSalida.Value.TimeOfDay >= horaSalida.Value
                             || a.fechaRegistro.ToShortDateString() == DateTime.Now.ToShortDateString()).SingleOrDefault();
                     }
                 }
@@ -359,7 +378,7 @@ namespace SistemaHorarios.Controllers
         /// </summary>
         /// <param name="empleado"></param>
         /// <returns></returns>
-        public bool CheckEmpleado(MEmpleado empleado,MEmpleado empleadoAsp)
+        public bool CheckEmpleado(MEmpleado empleado, MEmpleado empleadoAsp)
         {
             if (empleadoAsp.noEmpleado != empleado.noEmpleado)
             {
@@ -367,29 +386,38 @@ namespace SistemaHorarios.Controllers
             }
             return true;
         }
-        public bool esDiaFestivo() {
+        public bool esDiaFestivo()
+        {
             var actual = DateTime.Now;
-            var fechasFestivas = _Fechas.CargarFechas(a=>a.tipo==1);
-            foreach (var item in fechasFestivas.Where(a=>a.fechaInicio.ToShortDateString()==actual.ToShortDateString()
-                &&a.fechaFin.ToShortDateString()==actual.ToShortDateString()))
+            var fechasFestivas = _Fechas.CargarFechas(a => a.tipo == 1);
+            foreach (var item in fechasFestivas.Where(a => a.fechaInicio.ToShortDateString() == actual.ToShortDateString()
+                && a.fechaFin.ToShortDateString() == actual.ToShortDateString()))
             {
                 var inicio = item.fechaInicio;
                 var fin = item.fechaFin;
-                if (actual >= inicio && actual <= fin) {
+                if (actual >= inicio && actual <= fin)
+                {
                     return true;
                 }
-                else{
+                else
+                {
                     return false;
                 }
             }
             return false;
         }
-        public bool esDiaLaboral() {
+        /// <summary>
+        /// Revisa que la fecha actual sea laboral, ademas si no lo es revisa en la base de datos por alguna excepción de fecha
+        /// </summary>
+        /// <returns></returns>
+        public bool esDiaLaboral()
+        {
             var actual = DateTime.Now;
-            if (actual.DayOfWeek == DayOfWeek.Saturday || actual.DayOfWeek == DayOfWeek.Sunday) {
-                var diasLaborales = _Fechas.CargarFechas(a=>a.tipo==2);
+            if (actual.DayOfWeek == DayOfWeek.Saturday || actual.DayOfWeek == DayOfWeek.Sunday)
+            {
+                var diasLaborales = _Fechas.CargarFechas(a => a.tipo == 2);
                 foreach (var item in diasLaborales.Where(a => a.fechaInicio.ToShortDateString() == actual.ToShortDateString()
-                && a.fechaFin.ToShortDateString() == actual.ToShortDateString())) 
+                && a.fechaFin.ToShortDateString() == actual.ToShortDateString()))
                 {
                     var inicio = item.fechaInicio;
                     var fin = item.fechaFin;
@@ -401,15 +429,32 @@ namespace SistemaHorarios.Controllers
                         }
                         return false;
                     }
-                   
+
                 }
                 return false;
             }
             return true;
         }
-        public bool esDiaForzoso() {
+        public bool permitePermisos()
+        {
             var actual = DateTime.Now;
-            var fechasForzosas = _Fechas.CargarFechas(a=>a.tipo==2);
+            var fechaSinPermisos = _Fechas.CargarFechas(a => a.tipo == 3);
+            foreach (var item in fechaSinPermisos.Where(a => a.fechaInicio.ToShortDateString() == actual.ToShortDateString()
+                && a.fechaFin.ToShortDateString() == actual.ToShortDateString()))
+            {
+                var inicio = item.fechaInicio;
+                var fin = item.fechaFin;
+                if (actual >= inicio && actual <= fin)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        public bool esDiaForzoso()
+        {
+            var actual = DateTime.Now;
+            var fechasForzosas = _Fechas.CargarFechas(a => a.tipo == 2);
             foreach (var item in fechasForzosas)
             {
                 var inicio = item.fechaInicio;
@@ -418,13 +463,24 @@ namespace SistemaHorarios.Controllers
                 {
                     return true;
                 }
-                else {
+                else
+                {
                     return false;
                 }
             }
             return false;
         }
-        public string validacionFechas(MHistorial nuevoHistorial,IEnumerable<MHistorial>historial,MEmpleado empleado,MCategoria categoria,IEnumerable<MHistorial> registro) {
+        /// <summary>
+        /// Implementación general del metodo de validación
+        /// </summary>
+        /// <param name="nuevoHistorial"></param>
+        /// <param name="historial"></param>
+        /// <param name="empleado"></param>
+        /// <param name="categoria"></param>
+        /// <param name="registro"></param>
+        /// <returns></returns>
+        public string validacionFechas(MHistorial nuevoHistorial, IEnumerable<MHistorial> historial, MEmpleado empleado, MCategoria categoria, IEnumerable<MHistorial> registro)
+        {
             var id = nuevoHistorial.idHistorial;
             if (esDiaFestivo())
             {
@@ -432,7 +488,7 @@ namespace SistemaHorarios.Controllers
             }
             if (!esDiaLaboral())
             {
-                
+
                 return "noEsDiaLaboral();";
             }
             else

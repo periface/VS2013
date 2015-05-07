@@ -111,6 +111,19 @@
           <Property Name="hraSalida" Type="datetime" />
           <Property Name="fechaRegistro" Type="date" />
         </EntityType>
+        <EntityType Name="catPermisos">
+          <Key>
+            <PropertyRef Name="idPermiso" />
+          </Key>
+          <Property Name="idPermiso" Type="int" Nullable="false" />
+          <Property Name="motivoPermiso" Type="nvarchar" MaxLength="200" />
+          <Property Name="observaciones" Type="nvarchar" MaxLength="250" />
+          <Property Name="horaSalida" Type="datetime" />
+          <Property Name="horaLlegada" Type="datetime" />
+          <Property Name="noEmpleado" Type="int" />
+          <Property Name="autorizado" Type="bit" />
+          <Property Name="fechaCreacion" Type="datetime" />
+        </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
             <PropertyRef Name="diagram_id" />
@@ -153,6 +166,18 @@
               <PropertyRef Name="noEmpleado" />
             </Principal>
             <Dependent Role="catHistorial">
+              <PropertyRef Name="noEmpleado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catPermisos_catEmpleado">
+          <End Role="catEmpleado" Type="Self.catEmpleado" Multiplicity="0..1" />
+          <End Role="catPermisos" Type="Self.catPermisos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catEmpleado">
+              <PropertyRef Name="noEmpleado" />
+            </Principal>
+            <Dependent Role="catPermisos">
               <PropertyRef Name="noEmpleado" />
             </Dependent>
           </ReferentialConstraint>
@@ -224,6 +249,7 @@
           <EntitySet Name="catEmpleado" EntityType="Self.catEmpleado" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="catFechasEspeciales" EntityType="Self.catFechasEspeciales" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="catHistorial" EntityType="Self.catHistorial" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="catPermisos" EntityType="Self.catPermisos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_catEmpleado_AspNetUsers" Association="Self.FK_catEmpleado_AspNetUsers">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -236,6 +262,10 @@
           <AssociationSet Name="FK_catHistorial_catEmpleado" Association="Self.FK_catHistorial_catEmpleado">
             <End Role="catEmpleado" EntitySet="catEmpleado" />
             <End Role="catHistorial" EntitySet="catHistorial" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catPermisos_catEmpleado" Association="Self.FK_catPermisos_catEmpleado">
+            <End Role="catEmpleado" EntitySet="catEmpleado" />
+            <End Role="catPermisos" EntitySet="catPermisos" />
           </AssociationSet>
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -292,6 +322,11 @@
           <AssociationSet Name="AspNetUserRoles" Association="dbCITEmpleadoModel.AspNetUserRoles">
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <EntitySet Name="catPermisos" EntityType="dbCITEmpleadoModel.catPermisos" />
+          <AssociationSet Name="FK_catPermisos_catEmpleado" Association="dbCITEmpleadoModel.FK_catPermisos_catEmpleado">
+            <End Role="catEmpleado" EntitySet="catEmpleado" />
+            <End Role="catPermisos" EntitySet="catPermisos" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="C__MigrationHistory">
@@ -378,6 +413,7 @@
           <NavigationProperty Name="AspNetUsers" Relationship="dbCITEmpleadoModel.FK_catEmpleado_AspNetUsers" FromRole="catEmpleado" ToRole="AspNetUsers" />
           <NavigationProperty Name="catCategorias" Relationship="dbCITEmpleadoModel.FK_catEmpleado_catCategorias" FromRole="catEmpleado" ToRole="catCategorias" />
           <NavigationProperty Name="catHistorial" Relationship="dbCITEmpleadoModel.FK_catHistorial_catEmpleado" FromRole="catEmpleado" ToRole="catHistorial" />
+          <NavigationProperty Name="catPermisos" Relationship="dbCITEmpleadoModel.FK_catPermisos_catEmpleado" FromRole="catEmpleado" ToRole="catPermisos" />
         </EntityType>
         <EntityType Name="catFechasEspeciales">
           <Key>
@@ -481,6 +517,32 @@
         <Association Name="AspNetUserRoles">
           <End Type="dbCITEmpleadoModel.AspNetRoles" Role="AspNetRoles" Multiplicity="*" />
           <End Type="dbCITEmpleadoModel.AspNetUsers" Role="AspNetUsers" Multiplicity="*" />
+        </Association>
+        <EntityType Name="catPermisos">
+          <Key>
+            <PropertyRef Name="idPermiso" />
+          </Key>
+          <Property Name="idPermiso" Type="Int32" Nullable="false" />
+          <Property Name="motivoPermiso" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="observaciones" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="horaSalida" Type="DateTime" Precision="3" />
+          <Property Name="horaLlegada" Type="DateTime" Precision="3" />
+          <Property Name="noEmpleado" Type="Int32" />
+          <Property Name="autorizado" Type="Boolean" />
+          <Property Name="fechaCreacion" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="catEmpleado" Relationship="dbCITEmpleadoModel.FK_catPermisos_catEmpleado" FromRole="catPermisos" ToRole="catEmpleado" />
+        </EntityType>
+        <Association Name="FK_catPermisos_catEmpleado">
+          <End Type="dbCITEmpleadoModel.catEmpleado" Role="catEmpleado" Multiplicity="0..1" />
+          <End Type="dbCITEmpleadoModel.catPermisos" Role="catPermisos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catEmpleado">
+              <PropertyRef Name="noEmpleado" />
+            </Principal>
+            <Dependent Role="catPermisos">
+              <PropertyRef Name="noEmpleado" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -611,6 +673,20 @@
               <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="catPermisos">
+            <EntityTypeMapping TypeName="dbCITEmpleadoModel.catPermisos">
+              <MappingFragment StoreEntitySet="catPermisos">
+                <ScalarProperty Name="fechaCreacion" ColumnName="fechaCreacion" />
+                <ScalarProperty Name="autorizado" ColumnName="autorizado" />
+                <ScalarProperty Name="noEmpleado" ColumnName="noEmpleado" />
+                <ScalarProperty Name="horaLlegada" ColumnName="horaLlegada" />
+                <ScalarProperty Name="horaSalida" ColumnName="horaSalida" />
+                <ScalarProperty Name="observaciones" ColumnName="observaciones" />
+                <ScalarProperty Name="motivoPermiso" ColumnName="motivoPermiso" />
+                <ScalarProperty Name="idPermiso" ColumnName="idPermiso" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

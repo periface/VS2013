@@ -418,6 +418,7 @@
     <Content Include="Views\Shared\ErrorNoLayout.cshtml" />
     <Content Include="Views\PanelControl\DetalleFecha.cshtml" />
     <Content Include="Views\PanelControl\FormCalendario.cshtml" />
+    <Content Include="Views\PanelControl\AgendarPermiso.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

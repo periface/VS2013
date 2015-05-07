@@ -66,6 +66,7 @@
     <Compile Include="Models\MEmpleado.cs" />
     <Compile Include="Models\MFechaEspecial.cs" />
     <Compile Include="Models\MHistorial.cs" />
+    <Compile Include="Models\MPermiso.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicios\Categoria.cs" />
     <Compile Include="Servicios\Empleado.cs" />
@@ -77,6 +78,8 @@
     <Compile Include="Servicios\IFechasEspeciales.cs" />
     <Compile Include="Servicios\IGraficas.cs" />
     <Compile Include="Servicios\IHistorial.cs" />
+    <Compile Include="Servicios\IPermisos.cs" />
+    <Compile Include="Servicios\Permisos.cs" />
     <Compile Include="ValidacionesPers\NombreRepetido.cs" />
   </ItemGroup>
   <ItemGroup>

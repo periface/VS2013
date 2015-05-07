@@ -21,6 +21,8 @@
         <AssociationConnector Association="dbCITEmpleadoModel.FK_catEmpleado_catCategorias" />
         <AssociationConnector Association="dbCITEmpleadoModel.FK_catHistorial_catEmpleado" />
         <AssociationConnector Association="dbCITEmpleadoModel.AspNetUserRoles" />
+        <EntityTypeShape EntityType="dbCITEmpleadoModel.catPermisos" Width="1.5" PointX="8.375" PointY="7.75" />
+        <AssociationConnector Association="dbCITEmpleadoModel.FK_catPermisos_catEmpleado" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

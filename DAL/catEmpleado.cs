@@ -17,6 +17,7 @@ namespace DAL
         public catEmpleado()
         {
             this.catHistorial = new HashSet<catHistorial>();
+            this.catPermisos = new HashSet<catPermisos>();
         }
     
         public int noEmpleado { get; set; }
@@ -30,5 +31,6 @@ namespace DAL
         public virtual AspNetUsers AspNetUsers { get; set; }
         public virtual catCategorias catCategorias { get; set; }
         public virtual ICollection<catHistorial> catHistorial { get; set; }
+        public virtual ICollection<catPermisos> catPermisos { get; set; }
     }
 }

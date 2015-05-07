@@ -8,6 +8,10 @@ namespace SERVICIOS.FullCalendarModel
 {
     public class MFullCalendar
     {
+        public MFullCalendar()
+        {
+            ignorarHorario = false;
+        }
         public int id { get; set; }
         public string title { get; set; }
         public string start { get; set; }

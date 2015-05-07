@@ -96,7 +96,7 @@ namespace SistemaHorarios.Helpers
             htmlString.Append("<div class='" + divClass + "'>");
             htmlString.Append("<a class='" + hrefClass + "' id='miHistLink' href='#'>Mi Historial</a>");
             htmlString.Append("<a class='" + hrefClass + "' id='capDatos' href='#'>Capturar mis datos</a>");
-            htmlString.Append("<a class='" + hrefClass + "' href='#'>Agendar Permiso de Salida</a>");
+            htmlString.Append("<a class='" + hrefClass + "' id='agePerm' href='#'>Agendar Permiso de Salida</a>");
             htmlString.Append("<a class='" + hrefClass + "' id='histLink' href='#'>Historial de Usuarios</a>");
             htmlString.Append("<a class='" + hrefClass + "'id='repLink' href='#'>Reportes Graficos</a>");
             htmlString.Append("</div>");
@@ -108,7 +108,7 @@ namespace SistemaHorarios.Helpers
             htmlString.Append("<div class='" + divClass + "'>");
             htmlString.Append("<a class='" + hrefClass + "' id='miHistLink' href='#'>Mi Historial</a>");
             htmlString.Append("<a class='" + hrefClass + "' id='capDatos' href='#'>Capturar mis datos</a>");
-            htmlString.Append("<a class='" + hrefClass + "' href='#'>Agendar Permiso de Salida</a>");
+            htmlString.Append("<a class='" + hrefClass + "' id='agePerm' href='#'>Agendar Permiso de Salida</a>");
             htmlString.Append("</div>");
             return htmlString;
         }

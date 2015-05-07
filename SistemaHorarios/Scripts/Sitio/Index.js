@@ -3,6 +3,7 @@ $(function () {
     var $body = $("body");
     //Declaración de var 
     var $miHistorial = $("#miHistLink");
+    var $linkAgePerm = $("#agePerm");
     var $contenedorDetalle = $("#contenedorDetalle");
     var $modalDetalle = $("#modalDetalle");
     var $contenedor = $("#contenedor");
@@ -42,6 +43,9 @@ $(function () {
         $contenedorDetalle.load(url.cargaDetalleFecha + idEvento, function () {
             $modalDetalle.modal("show");
         });
+    }
+    var cargaPermisoForm = function () {
+        $contenedor.load("/PanelControl/AgendarPermiso");
     }
     var cargaMiHistorial = function () {
         $contenedor.load("/PanelControl/MiHistorial");
@@ -83,6 +87,11 @@ $(function () {
     $linkHistorial.click(function () {
         loading();
         cargaFormHistorial();
+    });
+    $linkAgePerm.click(function () {
+        loading();
+
+        cargaPermisoForm();
     });
     $linkReportes.click(function () {
         loading();

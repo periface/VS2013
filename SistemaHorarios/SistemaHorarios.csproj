@@ -195,6 +195,8 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-datetimepicker.css" />
+    <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -309,6 +311,8 @@
     <Content Include="Scripts\Bootstrap DatePicker\locales\bootstrap-datepicker.vi.js" />
     <Content Include="Scripts\Bootstrap DatePicker\locales\bootstrap-datepicker.zh-CN.js" />
     <Content Include="Scripts\Bootstrap DatePicker\locales\bootstrap-datepicker.zh-TW.js" />
+    <Content Include="Scripts\bootstrap-datetimepicker.js" />
+    <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\FullCalendar\es.js" />
@@ -364,6 +368,10 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\Notify\bootstrap-notify.js" />
     <Content Include="Scripts\Notify\bootstrap-notify.min.js" />
     <Content Include="Scripts\npm.js" />
@@ -419,6 +427,7 @@
     <Content Include="Views\PanelControl\DetalleFecha.cshtml" />
     <Content Include="Views\PanelControl\FormCalendario.cshtml" />
     <Content Include="Views\PanelControl\AgendarPermiso.cshtml" />
+    <Content Include="Views\Shared\ExitoNoLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

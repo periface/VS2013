@@ -26,7 +26,7 @@ namespace SERVICIOS.Servicios
         {
             try
             {
-
+                
                 var nuevoPermiso = Mapper.Map<MPermiso, catPermisos>(model);
                 _Permisos.GuardarRegistro(nuevoPermiso);
             }

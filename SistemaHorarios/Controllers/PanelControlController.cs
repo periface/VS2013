@@ -250,6 +250,12 @@ namespace SistemaHorarios.Controllers
         public ActionResult AgendarPermiso()
         {
             if (permitePermisos()) {
+                var id = User.Identity.GetUserId();
+                var empleado = _Empleado.CargarEmpleados(a => a.AspNetUsers.Id == id).SingleOrDefault();
+                if (hayPermisosAbiertos(empleado.noEmpleado)) {
+                    ViewBag.error = "Usted tiene un permiso pendiente";
+                    return PartialView("ErrorNoLayout");
+                }
                 return View();
             }
             else{
@@ -260,7 +266,17 @@ namespace SistemaHorarios.Controllers
         [HttpPost]
         public ActionResult AgendarPermiso(MPermiso model)
         {
-
+            if (ModelState.IsValid) {
+                if (Request.IsAjaxRequest()) {
+                    var id = User.Identity.GetUserId();
+                    var empleado = _Empleado.CargarEmpleados(a=>a.AspNetUsers.Id==id).SingleOrDefault();
+                    model.noEmpleado = empleado.noEmpleado;
+                    model.autorizacion = false;
+                    _Permisos.GuardarPermiso(model);
+                    ViewBag.exito = "Permiso agendado correctamente";
+                    return PartialView("ExitoNoLayout");
+                }
+            }
             return View();
         }
         #region Helpers
@@ -435,6 +451,10 @@ namespace SistemaHorarios.Controllers
             }
             return true;
         }
+        /// <summary>
+        /// Revisa si en la fecha actual esta permitido agendar permisos
+        /// </summary>
+        /// <returns></returns>
         public bool permitePermisos()
         {
             var actual = DateTime.Now;
@@ -450,6 +470,21 @@ namespace SistemaHorarios.Controllers
                 }
             }
             return true;
+        }
+        public bool hayPermisosAbiertos(int noEmpleado) {
+            var actual = DateTime.Now;
+            var permisos = _Permisos.CargaPermiso(a=>a.noEmpleado==noEmpleado);
+            foreach (var item in permisos.Where(a=>a.horaSalida.ToShortDateString()==actual.ToShortDateString()))
+            {
+                if (item.horaLlegada != null)
+                {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+            return false;
         }
         public bool esDiaForzoso()
         {

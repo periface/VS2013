@@ -115,7 +115,7 @@
           <Key>
             <PropertyRef Name="idPermiso" />
           </Key>
-          <Property Name="idPermiso" Type="int" Nullable="false" />
+          <Property Name="idPermiso" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="motivoPermiso" Type="nvarchar" MaxLength="200" />
           <Property Name="observaciones" Type="nvarchar" MaxLength="250" />
           <Property Name="horaSalida" Type="datetime" />

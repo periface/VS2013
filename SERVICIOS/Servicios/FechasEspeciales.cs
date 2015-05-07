@@ -89,20 +89,23 @@ namespace SERVICIOS.Servicios
             var listaFechas = new List<MFullCalendar>();
             foreach (var item in fechas)
             {
-                var stringFechaInicio = ConvertirDeUnix(item.inicio.Value);
-                var stringFechaFin = ConvertirDeUnix(item.fin.Value);
-                listaFechas.Add(new MFullCalendar()
+                if (item.inicio.HasValue && item.fin.HasValue)
                 {
-                    allDay = item.todoElDia.Value,
-                    className = item.clase,
-                    end = stringFechaFin.ToString("yyyy-MM-ddTHH:mm:ss"), //Formato obligatorio para full calendar
-                    id = item.id,
-                    start = stringFechaInicio.ToString("yyyy-MM-ddTHH:mm:ss"),
-                    title = item.titulo,
-                    fechaFin = stringFechaFin,
-                    fechaInicio = stringFechaInicio,
-                    descripcion = item.descripcion,
-                });
+                    var stringFechaInicio = ConvertirDeUnix(item.inicio.Value);
+                    var stringFechaFin = ConvertirDeUnix(item.fin.Value);
+                    listaFechas.Add(new MFullCalendar()
+                    {
+                        allDay = item.todoElDia.Value,
+                        className = item.clase,
+                        end = stringFechaFin.ToString("yyyy-MM-ddTHH:mm:ss"), //Formato obligatorio para full calendar
+                        id = item.id,
+                        start = stringFechaInicio.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        title = item.titulo,
+                        fechaFin = stringFechaFin,
+                        fechaInicio = stringFechaInicio,
+                        descripcion = item.descripcion,
+                    });
+                }
             }
             return listaFechas;
         }

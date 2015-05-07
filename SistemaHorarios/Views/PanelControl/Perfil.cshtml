@@ -1,0 +1,40 @@
+﻿@model SERVICIOS.Models.MEmpleado
+@{
+    ViewBag.Title = "Perfil";
+    Layout = null;
+}
+@if (Model != null)
+{
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h3 class="panel-title">Mi Perfil</h3></div>
+        <div class="panel-body">
+            <address>
+                <strong class="text-capitalize">Nombre : @Model.obtenerNombre()</strong><br>
+                No Empleado : @Model.noEmpleado<br>
+            </address>
+            <div class="form-group">
+                @using (Ajax.BeginForm("EntradaSalida", new AjaxOptions { InsertionMode = InsertionMode.Replace, HttpMethod = "Post", OnBegin = "btnLoad('#Entrada')", OnComplete = "btnUnload('#Entrada')" }))
+                {
+
+                    <input type="hidden" value="@Model.noEmpleado" name="id" />
+                    <input type="submit" id="Entrada" autocomplete="off" data-loading-text="Espere..." class="btn btn-success" value="Checar Entrada" />
+                }
+
+            </div>
+            <div class="form-group">
+                @using (Ajax.BeginForm("Salida", new AjaxOptions { InsertionMode = InsertionMode.Replace, HttpMethod = "Post", OnBegin = "btnLoad('#Salida')", OnComplete = "btnUnload('#Salida')" }))
+                {
+                    <input type="hidden" value="@Model.noEmpleado" name="id" />
+                    <input type="submit" id="Salida" autocomplete="off" data-loading-text="Espere..." class="btn btn-success" value="Checar Salida" />
+                }
+            </div>
+        </div>
+    </div>
+}
+@section Scripts{
+
+}
+
+
+
+

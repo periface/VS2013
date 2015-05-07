@@ -1,0 +1,89 @@
+﻿
+@{
+    ViewBag.Title = "FormCalendario";
+}
+<link href="~/Scripts/FullCalendar/fullcalendar.min.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-lg-4">
+        <h1>Calendario de asistencias</h1>
+    </div>
+    <div class="col-lg-8">
+        <input type="hidden" value="@ViewBag.id" id="id" />
+        <h2>Calendario</h2>
+        <div id="calendario">
+
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/Scripts/Bootstrap%20DatePicker/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/Bootstrap%20DatePicker/locales/bootstrap-datepicker.es.js"></script>
+<script src="~/Scripts/FullCalendar/moment.min.js"></script>
+<script src="~/Scripts/FullCalendar/fullcalendar.min.js"></script>
+<script src="~/Scripts/FullCalendar/es.js"></script>
+<script>
+    //DECLARACIONES
+    var $modal = $("#myModal");
+    var $contenedor = $("#contenedorFormulario");
+    var $modalDetalle = $("#modalDetalle");
+    var $contenedorDetalle = $("#contenedorDetalle");
+    var $calendario = $("#calendario");
+    var url = {
+        cargaFechas: function () {
+            var id = $("#id").val();
+            console.log(id);
+            return "/PanelControl/Calendario/" + id;
+        },
+    };
+
+
+    //CARGA MODAL CON DETALLE DEL EVENTO
+    var cargaModalDetalle = function (idEvento) {
+        $contenedorDetalle.load(url.cargaDetalleFecha + idEvento, function () {
+            $modalDetalle.modal("show");
+        });
+    }
+
+    //MENSAJE DE ERROR BASICO
+    var error = function () {
+        alert("Revise que todos los campos esten completos");
+    }
+
+    //INICIALIZACION DE FULL CALENDAR
+    var fullCalendarConfig = function () {
+        return {
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            loading: function (cargando) {
+
+            },
+            droppable: true,
+            unselectAuto: false,
+            lang: "es",
+            selectable: true,
+            timeFormat: "H(:mm)",
+            displayEventEnd: true,
+            events: url.cargaFechas(),
+            eventClick: function (calEvent, jsEvent, view) {
+                cargaModalDetalle(calEvent.id);
+            }
+        }
+    }
+
+    //FULL CALENDAR PRINCIPAL
+    var fullCalendar = function () {
+        $calendario.fullCalendar(fullCalendarConfig());
+    }
+    //INICIO
+    fullCalendar();
+</script>
+
+    }
+
+
+

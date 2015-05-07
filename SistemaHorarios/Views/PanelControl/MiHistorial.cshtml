@@ -1,0 +1,65 @@
+﻿@model  IEnumerable< SERVICIOS.Models.MHistorial> 
+@using SistemaHorarios.Helpers;
+@{
+    ViewBag.Title = "MiHistorial";
+    Layout = null;
+}
+<table class="table table-responsive table-condensed">
+    <thead class="text-center">
+        <tr>
+            <th>
+                No. Empleado
+            </th>
+            <th>
+                Hora de Entrada
+            </th>
+            <th>
+                Hora de Salida
+            </th>
+            <th>
+                Fecha
+            </th>
+            <th>Horas Trabajadas</th>
+            <th>Ver Permisos</th>
+        </tr>
+    </thead>
+    <tbody>
+        @Html.TablaReporte(Model, User)
+        @*@foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <a href="@Url.Action("Usuario", "PanelControl", new { id=item.noEmpleado  })" data-id="@item.noEmpleado" title="Clic para detalles">@item.noEmpleado</a>
+                    </td>
+                    <td>
+                        @item.hraEntrada.ToShortTimeString()
+                    </td>
+
+                    <td>
+                        @if (item.fechaRegistro > item.hraSalida && item.hraSalida != Convert.ToDateTime("01/01/0001"))
+                        {
+                              <a class="label label-danger">@((item.hraSalida == Convert.ToDateTime("01/01/0001")) ? item.hraSalida.ToShortTimeString() : "Por Definir") || El usuario no registro su salida</a>
+
+
+                        }
+                        else
+                        {
+
+                        @((item.hraSalida == Convert.ToDateTime("01/01/0001")) ? item.hraSalida.ToShortTimeString() : "Por Definir")
+                        }
+                    </td>
+                    <td>
+                        @item.fechaRegistro.ToShortDateString()
+                    </td>
+                    <td class="text-center">
+                        <p>@(item.hraSalida.Hour-item.hraEntrada.Hour)</p>
+
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-primary permisos" data-id="@item.noEmpleado" data-fecha="@item.fechaRegistro">Ver Permisos</a>
+                    </td>
+                </tr>
+            }*@
+    </tbody>
+</table>
+

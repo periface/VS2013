@@ -1,0 +1,21 @@
+﻿@model SERVICIOS.FullCalendarModel.MFullCalendar
+
+@{
+    ViewBag.Title = "DetalleFecha";
+    Layout = null;
+}
+<div class="row">
+    <div class="col-lg-12">
+        <a href="#" class="btn btn-danger" data-id="@Model.id" id="btnElimina">Eliminar</a> <a href="#" class="btn btn-primary" data-id="@Model.id" id="btnEditar">Editar</a>
+        <h2>Nombre del Evento o Restricción: @Model.title</h2>
+        <h3>Fecha de Inicio: @Model.fechaInicio.ToShortDateString()</h3>
+        <h3>Fecha de Fin: @Model.fechaFin.ToShortDateString()</h3>
+        @if (Model.allDay) { 
+         <h3>Duración: Este evento dura todo el dia</h3>
+        }
+        <h3>Descripción</h3>
+        <div class="well">
+            <p>@Model.descripcion</p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,204 @@
+﻿@using SistemaHorarios.Helpers
+@{
+    ViewBag.Title = "Dias festivos";
+}
+<style>
+    .noPermisos {
+        color: white !important;
+        background-color: red !important;
+    }
+
+    .diaFestivo {
+        color: white !important;
+        background-color: green !important;
+    }
+    .laborForzosa {
+        color:black !important;
+        background-color: yellow !important;
+    }
+</style>
+<link href="~/Scripts/Bootstrap%20DatePicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+<link href="~/Scripts/FullCalendar/fullcalendar.min.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-lg-12">
+        @Html.MenuConfiguracion(User)
+    </div>
+</div>
+<br />
+<br />
+
+<div class="row">
+    <div class="col-lg-4">
+        @*<div id='external-events'>
+            <h4>Draggable Events</h4>
+            <div class='fc-event draggable'>My Event 1</div>
+            <div class='fc-event'>My Event 2</div>
+            <div class='fc-event'>My Event 3</div>
+            <div class='fc-event'>My Event 4</div>
+            <div class='fc-event'>My Event 5</div>
+        </div>*@
+
+        <div class="well well-sm" >
+            <h3>Información</h3>
+            <p>Para agendar una fecha de click sobre la fecha deseada y llene los campos</p>
+            <p>Si lo desea tambien puede seleccionar multiples fechas</p>
+            <p>Para editar el evento de una fecha deseada seleccionelo y modifique los campos</p>
+        </div>
+        
+    </div>
+    <div class="col-lg-8">
+        <div id="calendario"></div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    @using (Ajax.BeginForm("FormularioFechas", new AjaxOptions { HttpMethod = "Post" }))
+    {
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Fecha especial</h4>
+                </div>
+
+
+                <div class="modal-body" id="contenedorFormulario">
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" id="btnAceptar" class="btn btn-primary">Guardar Fecha</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div class="modal fade" id="modalDetalle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Detalle</h4>
+                </div>
+
+
+                <div class="modal-body" id="contenedorDetalle">
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+</div>
+@section Scripts{
+    <script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/Bootstrap%20DatePicker/bootstrap-datepicker.js"></script>
+    <script src="~/Scripts/Bootstrap%20DatePicker/locales/bootstrap-datepicker.es.js"></script>
+    <script src="~/Scripts/FullCalendar/moment.min.js"></script>
+    <script src="~/Scripts/FullCalendar/fullcalendar.min.js"></script>
+    <script src="~/Scripts/FullCalendar/es.js"></script>
+    <script>
+        //DECLARACIONES
+        var $modal = $("#myModal");
+        var $contenedor = $("#contenedorFormulario");
+        var $modalDetalle = $("#modalDetalle");
+        var $contenedorDetalle = $("#contenedorDetalle");
+        var $calendario = $("#calendario");
+        var url = {
+            cargaFechas: "/Configuracion/Fechas",
+            guardaFechaForm: "/Configuracion/FormularioFechas",
+            cargaDetalleFecha: "/PanelControl/DetalleFecha/",
+            modificarDuracion: "/Configuracion/ModificarFecha",
+        };
+
+        //FULL CALENDAR ACTUALIZACIÓN
+        var refresh = function () {
+            $modal.modal("hide");
+            $calendario.fullCalendar('unselect');
+            $calendario.fullCalendar('refetchEvents');
+        }
+
+        //CARGA FORMULARIO ENVIAR 2 PARAMETROS
+        var cargaModal = function (start, end) {
+            $contenedor.load(url.guardaFechaForm + "?inicio=" + start + "&fin=" + end, function () {
+                $modal.modal("show");
+            });
+        }
+
+        //CARGA MODAL CON DETALLE DEL EVENTO
+        var cargaModalDetalle = function (idEvento) {
+            $contenedorDetalle.load(url.cargaDetalleFecha+idEvento, function () {
+                $modalDetalle.modal("show");
+            });
+        }
+
+        //MENSAJE DE ERROR BASICO
+        var error = function () {
+            alert("Revise que todos los campos esten completos");
+        }
+
+        //DRAG AND DROP EDICION
+        var editarEventoTiempo = function (idFecha, startFecha, endFecha) {
+            $.post(url.modificarDuracion, { id: idFecha, start: startFecha, end: endFecha }, function () {
+                modificado();
+            });
+        }
+        var modificado = function () {
+            $.notify({
+                // options
+                message: 'Fecha Modificada'
+            }, {
+                // settings
+                type: 'success'
+            });
+        }
+        //INICIALIZACION DE FULL CALENDAR
+        var fullCalendarConfig = function () {
+            return {
+                header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,agendaWeek,agendaDay'
+                },
+                loading: function (cargando) {
+                    
+                },
+                droppable: true,
+                drop:function(){
+                },
+                unselectAuto: false,
+                editable: true,
+                lang: "es",
+                eventDrop: function (event) {
+                    editarEventoTiempo(event.id, event.start.format(), event.end.format());
+                },
+                eventResize: function (event) {
+                    editarEventoTiempo(event.id, event.start.format(), event.end.format());
+                },
+                selectable: true,
+                select: function (start, end) {
+                    cargaModal(start, end);
+                },
+                timeFormat: "H(:mm)",
+                displayEventEnd:true,
+                events: url.cargaFechas,
+                eventClick: function (calEvent, jsEvent, view) {
+                    cargaModalDetalle(calEvent.id);
+                }
+            }
+        }
+        
+        //FULL CALENDAR PRINCIPAL
+        var fullCalendar = function () {
+            $calendario.fullCalendar(fullCalendarConfig());
+        }
+        //INICIO
+        fullCalendar();
+    </script>
+}

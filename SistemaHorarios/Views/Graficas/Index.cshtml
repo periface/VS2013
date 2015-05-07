@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<div id="container"></div>
+<script src="~/Scripts/Highcharts-4.1.5/js/highcharts.js"></script>
+<script>
+    $(function () {
+        $.getJSON("@Url.Action("Index", "Graficas", new { id=Model.noEmpleado })", function (data) {
+            console.log(data);
+            $('#container').highcharts(graficaColumnas(data));
+
+        });
+        ///Constructor de grafica
+        var graficaColumnas = function (data) {
+            return {
+                chart: data.chart,
+
+                title: data.title,
+
+                xAxis: {
+                    categories: data.xAxis.categories,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: data.yAxis.min,
+                    title: {
+                        text: data.yAxis.title.text
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0"><a href="#"> {series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y:.1f} hrs.</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: data.series
+            }
+        }
+        });
+
+</script>
+
+

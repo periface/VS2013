@@ -1,0 +1,40 @@
+﻿@model IEnumerable< SERVICIOS.Models.MHistorial>
+
+@{
+    Layout = null;
+}
+<link href="~/Scripts/Bootstrap%20DatePicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+@using (@Ajax.BeginForm("Filtrar", new AjaxOptions { InsertionMode = InsertionMode.Replace, HttpMethod = "Post",UpdateTargetId="tabla" })) { 
+<div class="form-group">
+    <label class="control-label">Usuario</label>
+    <input type="text" name="usuario" placeholder="No. Usuario ó Nombre" class="form-control"/>
+</div>
+    <div class="form-group">
+    <label class="control-label">Fecha de Inicio</label>
+        <input type="text" name="fechaInicio" placeholder="Seleccionar fecha" class="form-control fecha" />
+</div>
+<div class="form-group">
+    <label class="control-label">Fecha de Fin</label>
+    <input type="text" name="fechaFin" placeholder="Seleccionar fecha" class="form-control fecha" />
+</div>
+<div class="form-group">
+    <input type="submit" class="btn btn-success" value="Filtrar" />
+</div>
+    <div class="form-group">
+    
+</div>
+    <div id="tabla">
+        @{Html.RenderPartial("tabla");}
+    </div>
+}
+<script src="~/Scripts/Bootstrap%20DatePicker/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/Bootstrap%20DatePicker/locales/bootstrap-datepicker.es.js"></script>
+<script>
+    $(function () {
+        $(".fecha").datepicker({
+            format: "dd/mm/yyyy",
+            language: "es",
+            autoclose: true,
+        });
+    })
+</script>

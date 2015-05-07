@@ -1,0 +1,114 @@
+﻿@model SERVICIOS.Models.MEmpleado
+@{
+    ViewBag.Title = "Usuario";
+}
+<link href="~/Scripts/Bootstrap%20DatePicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-lg-4">
+        <h2>Detalles del Empleado</h2>
+        <p>
+            @Model.obtenerNombre()
+
+        </p>
+        <p>
+          Numero de Empleado :  @Model.noEmpleado
+          @Html.HiddenFor(a=>a.noEmpleado)
+        </p>
+        <p>
+          Numero de Horas Diarias Asignadas :  @Model.noHorasAginadas
+        </p>
+    </div>
+    <div class="col-lg-8">
+        <div class="jumbotron">
+            <div class="row">
+                <h3>Filtrar Resultados</h3>
+                <div class="form-group">
+                    <label class="control-label">Fecha de Inicio</label>
+                    <input type="text" placeholder="Seleccionar fecha" id="fechaInicio" name="fechaInicio" class="form-control fecha" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Fecha de Fin</label>
+                    <input type="text" placeholder="Seleccionar fecha" id="fechaFin" name="fechaFin" class="form-control fecha" />
+                </div>
+                <div class="form-group">
+                    <button id="filtro" class="btn btn-success" >Filtrar</button>
+                </div>
+                <div id="container"></div>
+
+            </div>
+        </div>
+        
+    </div>
+</div>
+@section Scripts{
+<script src="~/Scripts/Highcharts-4.1.5/js/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+<script src="~/Scripts/Bootstrap%20DatePicker/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/Bootstrap%20DatePicker/locales/bootstrap-datepicker.es.js"></script>
+<script>
+    $(function () {
+        $(".fecha").datepicker({
+            format: "yyyy-mm-dd",
+            language: "es",
+            autoclose: true,
+
+        });
+        $("#filtro").click(function () {
+            cargaDatosIdFechas($("#noEmpleado").val(),$("#fechaInicio").val(),$("#fechaFin").val());
+        });
+
+
+        var cargaDatosId = function (id) {
+            $.getJSON("/Graficas/Index/"+id, function (data) {
+                console.log(data);
+                $('#container').highcharts(graficaColumnas(data));
+            });
+        }
+        var cargaDatosIdFechas = function (id, fechaInicio, fechaFin) {
+            console.log(fechaInicio);
+            console.log(fechaFin);
+            var url = "/Graficas/Index";
+            $.getJSON(url, {id:id,Inicio:fechaInicio,Fin:fechaFin}, function (data) {
+
+                $('#container').highcharts(graficaColumnas(data));
+            });
+        }
+        cargaDatosId($("#noEmpleado").val());
+        ///Constructor de grafica
+        var graficaColumnas = function (data) {
+            return {
+                chart: data.chart,
+
+                title: data.title,
+
+                xAxis: {
+                    categories: data.xAxis.categories,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: data.yAxis.min,
+                    title: {
+                        text: data.yAxis.title.text
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0"><a href="#"> {series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y:.1f} hrs.</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: data.series
+            }
+        }
+    });
+
+</script>
+}

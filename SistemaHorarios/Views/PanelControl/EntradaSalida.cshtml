@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "EntradaSalida";
+    Layout = null;
+}
+@using (Ajax.BeginForm("EntradaSalida", new AjaxOptions { InsertionMode = InsertionMode.Replace, HttpMethod = "Post", UpdateTargetId = "mensaje" }))
+{
+
+    <h2>Entrada Salida</h2>
+    <input type="submit" class="btn btn-success" value="Checar Entrada" />
+}
+

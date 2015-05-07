@@ -1,0 +1,16 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+
+@{
+    ViewBag.Title = "Error";
+}
+
+@if (ViewBag.error != null) { 
+<h1 class="text-danger">Error.</h1>
+<h2 class="text-danger">@ViewBag.error</h2>
+
+}
+else { 
+<h1 class="text-danger">Error.</h1>
+<h2 class="text-danger">Ha ocurrido un error con su petición</h2>
+
+}

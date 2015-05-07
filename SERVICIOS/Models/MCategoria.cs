@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace SERVICIOS.Models
 {
+    //Modelo Categoria
     public class MCategoria
     {
         public int idCategoria { get; set; }

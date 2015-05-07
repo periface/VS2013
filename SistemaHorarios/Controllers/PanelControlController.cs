@@ -48,7 +48,7 @@ namespace SistemaHorarios.Controllers
                 }
                 else
                 {
-                    ViewBag.error = "No esta autorizado a ver información de otros usuarios";
+                    ViewBag.error = "No esta autorizado a ver información de usuarios";
                     return View("Error");
                 }
             }

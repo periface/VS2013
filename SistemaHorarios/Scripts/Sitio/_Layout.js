@@ -8,16 +8,15 @@ var checkado = function () {
         type: 'success'
     });
 }
-var noEntrada = function () {
-
-    cargaMiHistorial();
-    $.notify({
-        // options
-        message: 'No puede agendar permisos, usted no ha registrado su entrada'
-    }, {
-        // settings
-        type: 'warning'
-    });
+var permisoCerrado = function () {
+    $("#btnCerrar").addClass("hidden");
+    $("#mensaje").removeClass("text-danger");
+    $("#mensaje").addClass("text-success");
+    $("#mensaje").text("Permiso cerrado con exito");
+}
+var errorCerrar = function () {
+    $("#mensaje").addClass("text-danger");
+    $("#mensaje").text("El permiso no pudo cerrarse, contacte con el administrador");
 }
 var noEsDiaLaboral = function () {
     $.notify({

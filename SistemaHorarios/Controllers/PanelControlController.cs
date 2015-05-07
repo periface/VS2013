@@ -113,7 +113,18 @@ namespace SistemaHorarios.Controllers
         public ActionResult Permisos(DateTime? fecha, int id)
         {
             //TODO Vista parcial de los permisos agendados, en un modal (posibles acciones adicionales dentro del mismo)
-            return View();
+            var permisos = _Permisos.CargaPermiso(a=>a.noEmpleado==id);
+            var permisosActual = permisos.Where(a=>a.horaSalida.ToShortDateString() == fecha.Value.ToShortDateString());
+            return View(permisosActual);
+        }
+        public ActionResult CerrarPermiso(int idPermiso) {
+            if (Request.IsAjaxRequest()) {
+                var permiso = _Permisos.CargaPermiso(a => a.idPermiso == idPermiso).SingleOrDefault();
+                permiso.horaLlegada = DateTime.Now;
+                _Permisos.EditarPermiso(permiso);
+                return JavaScript("permisoCerrado();");
+            }
+            return JavaScript("errorCerrar();");
         }
         public ActionResult CapturarDatos()
         {

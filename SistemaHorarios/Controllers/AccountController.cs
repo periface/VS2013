@@ -12,6 +12,7 @@ using SistemaHorarios.Models;
 
 namespace SistemaHorarios.Controllers
 {
+    //Prueba de Comentario
     [Authorize]
     public class AccountController : Controller
     {

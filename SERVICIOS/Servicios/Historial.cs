@@ -86,11 +86,16 @@ namespace SERVICIOS.Servicios
             var lista = new List<FullCalendarModel.MFullCalendar>();
             foreach (var item in listaRegistros)
             {
-                lista.Add(new FullCalendarModel.MFullCalendar {
-                    start = item.hraEntrada.Value.ToString("yyyy-MM-ddTHH:mm:ss"),
-                    end = item.hraSalida.Value.ToString("yyyy-MM-ddTHH:mm:ss"),
-                    title = item.catEmpleado.nomEmpleado,
-                });
+                //Arreglado error de fecha nula 7-05-15
+                if (item.hraEntrada.HasValue && item.hraSalida.HasValue) {
+
+                    lista.Add(new FullCalendarModel.MFullCalendar
+                    {
+                        start = item.hraEntrada.Value.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        end = item.hraSalida.Value.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        title = item.catEmpleado.nomEmpleado,
+                    });
+                }
             }
             return lista;
         }
@@ -101,13 +106,17 @@ namespace SERVICIOS.Servicios
             var lista = new List<FullCalendarModel.MFullCalendar>();
             foreach (var item in listaRegistros)
             {
-                lista.Add(new FullCalendarModel.MFullCalendar
+                //Arreglado error de fecha nula 7-05-15
+                if (item.hraEntrada.HasValue && item.hraSalida.HasValue)
                 {
-                    start = item.hraEntrada.Value.ToString("yyyy-MM-ddTHH:mm:ss"),
-                    end = item.hraSalida.Value.ToString("yyyy-MM-ddTHH:mm:ss"),
-                    title = item.catEmpleado.nomEmpleado,
 
-                });
+                    lista.Add(new FullCalendarModel.MFullCalendar
+                    {
+                        start = item.hraEntrada.Value.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        end = item.hraSalida.Value.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        title = item.catEmpleado.nomEmpleado,
+                    });
+                }
             }
             return lista;
         }

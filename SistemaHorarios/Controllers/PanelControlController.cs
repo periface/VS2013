@@ -335,7 +335,7 @@ namespace SistemaHorarios.Controllers
                     registro = historial.Where(a =>a.hraSalida.HasValue 
                         && a.hraSalida.Value.TimeOfDay <= horaSalida.Value 
                         && a.hraSalida.Value.TimeOfDay>=horaEntrada 
-                        || a.fechaRegistro.ToShortDateString() == DateTime.Now.ToShortDateString()).SingleOrDefault();
+                        && a.fechaRegistro.ToShortDateString() == DateTime.Now.ToShortDateString()).SingleOrDefault();
                     if (registro == null)
                     {
                         registro = historial.Where(a => a.hraSalida.HasValue 
@@ -370,7 +370,8 @@ namespace SistemaHorarios.Controllers
         public bool esDiaFestivo() {
             var actual = DateTime.Now;
             var fechasFestivas = _Fechas.CargarFechas(a=>a.tipo==1);
-            foreach (var item in fechasFestivas)
+            foreach (var item in fechasFestivas.Where(a=>a.fechaInicio.ToShortDateString()==actual.ToShortDateString()
+                &&a.fechaFin.ToShortDateString()==actual.ToShortDateString()))
             {
                 var inicio = item.fechaInicio;
                 var fin = item.fechaFin;

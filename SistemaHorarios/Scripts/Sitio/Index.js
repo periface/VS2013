@@ -1,4 +1,5 @@
-﻿$(function () {
+﻿/// <reference path="../FullCalendar/fullcalendar.min.js" />
+$(function () {
     var $body = $("body");
     //Declaración de var 
     var $miHistorial = $("#miHistLink");
@@ -8,10 +9,39 @@
     var $linkReportes = $("#repLink");
     var $linkPermisos = $(".permisos");
     var $linkDatos = $("#capDatos");
-    
+    var $calendario = $("#calendarioAct");
+    var url = {
+        cargaFechas: "/Configuracion/Fechas",
+    }
+    var calendarioConfig = function () {
+        return {
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            loading: function (cargando) {
+
+            },
+            lang: "es",
+            selectable: true,
+            select: function (start, end) {
+
+            },
+            timeFormat: "H(:mm)",
+            displayEventEnd: true,
+            events: url.cargaFechas,
+            eventClick: function (calEvent, jsEvent, view) {
+                
+            }
+        }
+    }
     //Declaración de fun
     var cargaMiHistorial = function () {
         $contenedor.load("/PanelControl/MiHistorial");
+    }
+    var cargaCalendarioAct = function () {
+        $calendario.fullCalendar(calendarioConfig());
     }
     var cargaFormDatos = function () {
         $contenedor.load("/PanelControl/CapturarDatos");
@@ -37,7 +67,6 @@
         $contenedor.html("<p>Cargando...</p>");
     }
     var loadingModal = function (element) {
-
         $(element).button("loading")
     }
     var unLoadingModal = function (element) {
@@ -72,5 +101,5 @@
         loadingModal(_self);
         cargaPermisos(id, fecha, _self);
     });
-
+    cargaCalendarioAct();
 })

@@ -1,5 +1,24 @@
-﻿body {
-    padding-top: 50px;
+﻿/*Estilos para full calendar*/
+.noPermisos {
+    color: white !important;
+    background-color: red !important;
+    word-wrap:break-word;
+}
+
+.diaFestivo {
+    color: white !important;
+    background-color: green !important;
+    word-wrap:break-word;
+}
+
+.laborForzosa {
+    color: black !important;
+    background-color: yellow !important;
+    word-wrap:break-word;
+}
+
+body {
+    /*padding-top: 50px;*/
     padding-bottom: 20px;
 }
 

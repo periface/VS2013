@@ -24,8 +24,9 @@ namespace SERVICIOS.Servicios
 
         public void GuardarFecha(MFechaEspecial model)
         {
-            
-            var nuevaFecha = new catFechasEspeciales() { 
+
+            var nuevaFecha = new catFechasEspeciales()
+            {
                 clase = cssClass(model.tipo),
                 descripcion = model.descripcion,
                 fin = model.fin,
@@ -33,14 +34,14 @@ namespace SERVICIOS.Servicios
                 tipo = model.tipo,
                 titulo = model.titulo,
                 todoElDia = model.todoElDia,
-                
+
             };
             _FechasEspeciales.GuardarRegistro(nuevaFecha);
         }
 
         public void EditarFecha(MFechaEspecial model)
         {
-            var original = _FechasEspeciales.CargaRegistro(a=>a.id==model.id).SingleOrDefault();
+            var original = _FechasEspeciales.CargaRegistro(a => a.id == model.id).SingleOrDefault();
             original.inicio = model.inicio;
             original.fin = model.fin;
             _FechasEspeciales.EditarRegistro(original);
@@ -57,20 +58,27 @@ namespace SERVICIOS.Servicios
             var listaFechas = new List<MFullCalendar>();
             foreach (var item in fechas)
             {
-                var stringFechaInicio = ConvertirDeUnix(item.inicio.Value);
-                var stringFechaFin = ConvertirDeUnix(item.fin.Value);
-                listaFechas.Add(new MFullCalendar()
+                //Resuelto error por valor nulo en fechas
+                if (item.inicio.HasValue && item.fin.HasValue)
                 {
-                    allDay = item.todoElDia.Value,
-                    className = item.clase,
-                    end = stringFechaFin.ToString("yyyy-MM-ddTHH:mm:ss"),
-                    id = item.id,
-                    start = stringFechaInicio.ToString("yyyy-MM-ddTHH:mm:ss"),
-                    title = item.titulo,
-                    fechaFin = stringFechaFin,
-                    fechaInicio = stringFechaInicio,
-                    descripcion = item.descripcion
-                });
+                    var stringFechaInicio = ConvertirDeUnix(item.inicio.Value);
+                    var stringFechaFin = ConvertirDeUnix(item.fin.Value);
+                    listaFechas.Add(new MFullCalendar()
+                    {
+                        allDay = item.todoElDia.Value,
+                        className = item.clase,
+                        end = stringFechaFin.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        id = item.id,
+                        start = stringFechaInicio.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        title = item.titulo,
+                        fechaFin = stringFechaFin,
+                        fechaInicio = stringFechaInicio,
+                        descripcion = item.descripcion
+                    });
+
+                }
+                
+                
             }
             return listaFechas;
         }
@@ -98,24 +106,29 @@ namespace SERVICIOS.Servicios
             }
             return listaFechas;
         }
-        
+
         public DateTime ConvertirDeUnix(double unixTimeStamp)
         {
             var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             return origin.AddMilliseconds(unixTimeStamp);
         }
-        public double ConvertirDeFechaAUnix(DateTime fecha) {
+        public double ConvertirDeFechaAUnix(DateTime fecha)
+        {
             double unixTimestamp = (double)(fecha.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, 0))).TotalMilliseconds;
             return unixTimestamp;
         }
-        public string cssClass(int tipo) {
-            if (tipo == 1) {
+        public string cssClass(int tipo)
+        {
+            if (tipo == 1)
+            {
                 return "diaFestivo";
             }
-            if (tipo == 2) {
+            if (tipo == 2)
+            {
                 return "laborForzosa";
             }
-            if (tipo == 3) {
+            if (tipo == 3)
+            {
                 return "noPermisos";
             }
             return null;
@@ -125,6 +138,6 @@ namespace SERVICIOS.Servicios
 
 
 
-        
+
     }
 }

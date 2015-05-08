@@ -141,6 +141,14 @@ namespace SistemaHorarios.Controllers
             }
             return PartialView();
         }
+        public ActionResult EliminarEvento(int id) {
+            var fecha = _Fechas.CargarFechas(a=>a.id==id).SingleOrDefault();
+            var fechaEspecial = new MFechaEspecial() { 
+                id = id
+            };
+            _Fechas.EliminarFecha(fechaEspecial);
+            return JavaScript("eliminado();");
+        }
         public ActionResult EditarHistorial()
         {
             return View();

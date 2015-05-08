@@ -58,7 +58,8 @@ namespace SERVICIOS.Servicios
 
         public void EliminarFecha(MFechaEspecial model)
         {
-            throw new NotImplementedException();
+            var fecha = _FechasEspeciales.CargaRegistro(a=>a.id==model.id).SingleOrDefault();
+            _FechasEspeciales.EliminarRegistro(fecha);
         }
 
         public IEnumerable<MFullCalendar> CargarFechas()

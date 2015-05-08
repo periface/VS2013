@@ -486,9 +486,9 @@ namespace SistemaHorarios.Controllers
         public bool hayPermisosAbiertos(int noEmpleado) {
             var actual = DateTime.Now;
             var permisos = _Permisos.CargaPermiso(a=>a.noEmpleado==noEmpleado);
-            foreach (var item in permisos.Where(a=>a.horaSalida.ToShortDateString()==actual.ToShortDateString()))
+            foreach (var item in permisos.Where(a=>a.horaSalida.ToShortDateString()==actual.ToShortDateString()&&a.horaLlegada==null))
             {
-                if (item.horaLlegada == null)
+                if (item.horaLlegada != null)
                 {
                     return false;
                 }

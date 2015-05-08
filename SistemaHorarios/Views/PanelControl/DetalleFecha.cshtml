@@ -8,7 +8,11 @@
     <div class="col-lg-12">
         @if (User.IsInRole("Administrador"))
         {
-            <a href="#" class="btn btn-danger" data-id="@Model.id" id="btnElimina">Eliminar</a> <a href="#" class="btn btn-primary" data-id="@Model.id" id="btnEditar">Editar</a>
+            using (Ajax.BeginForm("EliminarEvento","Configuracion", new AjaxOptions { HttpMethod="Post",Confirm = "Desea eliminar esta fecha" }))
+            { 
+                @Html.HiddenFor(a=>a.id)
+            <button type="submit" class="btn btn-danger" data-id="@Model.id" id="btnElimina">Eliminar</button> <a href="#" class="btn btn-primary" data-id="@Model.id" id="btnEditar">Editar</a>
+            }
 
         }
         <hgroup>

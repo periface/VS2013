@@ -34,7 +34,7 @@
                     <button id="filtro" class="btn btn-success" >Filtrar</button>
                 </div>
                 <div id="container"></div>
-
+                <div id="container2"></div>
             </div>
         </div>
         
@@ -68,14 +68,51 @@
             console.log(fechaInicio);
             console.log(fechaFin);
             var url = "/Graficas/Index";
+            var url2 = "/Graficas/Permisos";
             $.getJSON(url, {id:id,Inicio:fechaInicio,Fin:fechaFin}, function (data) {
-
                 $('#container').highcharts(graficaColumnas(data));
             });
+            $.getJSON(url2, { id: id, Inicio: fechaInicio, Fin: fechaFin }, function (data) {
+                $('#container2').highcharts(graficaColumnasNeg(data));
+            });
+
         }
         cargaDatosId($("#noEmpleado").val());
         ///Constructor de grafica
         var graficaColumnas = function (data) {
+            return {
+                chart: data.chart,
+
+                title: data.title,
+
+                xAxis: {
+                    categories: data.xAxis.categories,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: data.yAxis.min,
+                    title: {
+                        text: data.yAxis.title.text
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0"><a href="#"> {series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y:.1f} hrs.</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: data.series
+            }
+        }
+        var graficaColumnasNeg = function (data) {
             return {
                 chart: data.chart,
 

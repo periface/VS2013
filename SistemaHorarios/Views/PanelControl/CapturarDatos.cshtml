@@ -52,7 +52,15 @@
                         <label class="control-label">
                             Tipo de Empleado
                         </label>
-                        @Html.DropDownList("tipoEmpleado", (IEnumerable<SelectListItem>)ViewBag.tipos, new { @class = "form-control" })
+                        @if (deshabilitado)
+                        {
+                            @Html.DropDownList("tipoEmpleado", (IEnumerable<SelectListItem>)ViewBag.tipos, new { @class = "form-control", disabled = "disabled" })
+                    
+                        }
+                        else {
+                            @Html.DropDownList("tipoEmpleado", (IEnumerable<SelectListItem>)ViewBag.tipos, new { @class = "form-control", disabled = "disabled" })
+                    
+                        }
                     </div>
                     <button type="submit" class="btn btn-success">Guardar Datos</button>
 

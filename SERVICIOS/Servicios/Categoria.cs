@@ -21,19 +21,28 @@ namespace SERVICIOS.Servicios
             Mapper.CreateMap<catCategorias, MCategoria>();
             Mapper.CreateMap<MCategoria, catCategorias>();
         }
-        public void GuardarCategoria(catCategorias model)
+        public void GuardarCategoria(MCategoria model)
         {
-            throw new NotImplementedException();
+            var categoria = new catCategorias() { 
+                hraEntAsignada = model.hraEntAsignada,
+                hraSalAsignada = model.hraSalAsignada,
+                nomCategoria = model.nomCategoria
+            };
+            _Categorias.GuardarRegistro(categoria);
+
         }
 
-        public void EditarCategoria(catCategorias model)
+        public void EditarCategoria(MCategoria model)
         {
-            throw new NotImplementedException();
+            var original = _Categorias.CargaRegistro(a=>a.idCategoria==model.idCategoria).SingleOrDefault();
+            var editado = Mapper.Map(model,original);
+            _Categorias.EditarRegistro(editado);
         }
 
-        public void EliminarCategoria(catCategorias model)
+        public void EliminarCategoria(MCategoria model)
         {
-            throw new NotImplementedException();
+            var registro = _Categorias.CargaRegistro(a=>a.idCategoria==model.idCategoria).SingleOrDefault();
+            _Categorias.EliminarRegistro(registro);
         }
 
         public IEnumerable<MCategoria> CargarCategorias()

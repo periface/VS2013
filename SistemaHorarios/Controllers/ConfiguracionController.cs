@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SERVICIOS.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,6 +10,7 @@ namespace SistemaHorarios.Controllers
     public class ConfiguracionController : Controller
     {
         SERVICIOS.Servicios.FechasEspeciales _Fechas = new SERVICIOS.Servicios.FechasEspeciales();
+        SERVICIOS.Servicios.Categoria _Categorias = new SERVICIOS.Servicios.Categoria();
         //
         // GET: /Configuracion/
         public ActionResult Index()
@@ -17,11 +19,30 @@ namespace SistemaHorarios.Controllers
         }
         public ActionResult CategoriasEmpleados()
         {
+            var categorias = _Categorias.CargarCategorias();
+            return View(categorias);
+        }
+        public ActionResult FrmNuevaCategoria() {
             return View();
         }
+        public ActionResult FrmEditarCategoria(int id) {
+            var categoria = _Categorias.CargarCategorias(a=>a.idCategoria==id);
+
+            return View(categoria.SingleOrDefault());
+        }
         [HttpPost]
-        public ActionResult CategoriasEmpleados(FormCollection forms)
+        public ActionResult FrmEditarCategoria(MCategoria model)
         {
+            if (Request.IsAjaxRequest()) {
+                if (ModelState.IsValid) {
+
+                    _Categorias.EditarCategoria(model);
+                    return JavaScript("cambiosGuardados();");
+                }
+            }
+            return PartialView();
+        }
+        public ActionResult FrmEliminarCategoria(int id) {
             return View();
         }
         public ActionResult ConfigDiasFestivos()

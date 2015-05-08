@@ -8,6 +8,16 @@ var checkado = function () {
         type: 'success'
     });
 }
+var cambiosGuardados = function () {
+    $("#modalCategorias").modal("hide");
+    $.notify({
+        // options
+        message: 'Cambios Guardados (Es necesario <a href="/Configuracion/CategoriasEmpleados">actualizar la pagina</a>)'
+    }, {
+        // settings
+        type: 'success'
+    });
+}
 var permisoCerrado = function () {
     $("#btnCerrar").addClass("hidden");
     $("#mensaje").removeClass("text-danger");

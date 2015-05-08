@@ -4,25 +4,24 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="aad266008c97401d82af6763a670441b" Name="Diagram1" ZoomLevel="86">
+      <Diagram DiagramId="aad266008c97401d82af6763a670441b" Name="Diagram1" ZoomLevel="29">
         <EntityTypeShape EntityType="dbCITEmpleadoModel.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="dbCITEmpleadoModel.AspNetRoles" Width="1.5" PointX="0.75" PointY="4.5" />
-        <EntityTypeShape EntityType="dbCITEmpleadoModel.AspNetUserClaims" Width="1.5" PointX="5.25" PointY="9.25" />
-        <EntityTypeShape EntityType="dbCITEmpleadoModel.AspNetUserLogins" Width="1.5" PointX="5.25" PointY="3.125" />
-        <EntityTypeShape EntityType="dbCITEmpleadoModel.AspNetUsers" Width="1.5" PointX="3" PointY="3.25" />
-        <EntityTypeShape EntityType="dbCITEmpleadoModel.catCategorias" Width="1.5" PointX="6" PointY="6.375" />
-        <EntityTypeShape EntityType="dbCITEmpleadoModel.catEmpleado" Width="1.5" PointX="8.25" PointY="3.875" />
-        <EntityTypeShape EntityType="dbCITEmpleadoModel.catFechasEspeciales" Width="1.5" PointX="0.75" PointY="8.75" />
-        <EntityTypeShape EntityType="dbCITEmpleadoModel.catHistorial" Width="1.5" PointX="10.5" PointY="4.25" />
-        <EntityTypeShape EntityType="dbCITEmpleadoModel.sysdiagrams" Width="1.5" PointX="7.75" PointY="0.75" />
+        <EntityTypeShape EntityType="dbCITEmpleadoModel.AspNetRoles" Width="1.5" PointX="0.75" PointY="6" />
+        <EntityTypeShape EntityType="dbCITEmpleadoModel.AspNetUserClaims" Width="1.5" PointX="5.25" PointY="4.625" />
+        <EntityTypeShape EntityType="dbCITEmpleadoModel.AspNetUserLogins" Width="1.5" PointX="5.25" PointY="13.75" />
+        <EntityTypeShape EntityType="dbCITEmpleadoModel.AspNetUsers" Width="1.5" PointX="3" PointY="4.75" />
+        <EntityTypeShape EntityType="dbCITEmpleadoModel.catCategorias" Width="1.5" PointX="3" PointY="9.875" />
+        <EntityTypeShape EntityType="dbCITEmpleadoModel.catEmpleado" Width="1.5" PointX="5.25" PointY="8.25" />
+        <EntityTypeShape EntityType="dbCITEmpleadoModel.catFechasEspeciales" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="dbCITEmpleadoModel.catHistorial" Width="1.5" PointX="7.5" PointY="7" />
+        <EntityTypeShape EntityType="dbCITEmpleadoModel.catPermisos" Width="1.5" PointX="7.5" PointY="9.875" />
         <AssociationConnector Association="dbCITEmpleadoModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="dbCITEmpleadoModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="dbCITEmpleadoModel.FK_catEmpleado_AspNetUsers" />
         <AssociationConnector Association="dbCITEmpleadoModel.FK_catEmpleado_catCategorias" />
         <AssociationConnector Association="dbCITEmpleadoModel.FK_catHistorial_catEmpleado" />
-        <AssociationConnector Association="dbCITEmpleadoModel.AspNetUserRoles" />
-        <EntityTypeShape EntityType="dbCITEmpleadoModel.catPermisos" Width="1.5" PointX="8.375" PointY="7.75" />
         <AssociationConnector Association="dbCITEmpleadoModel.FK_catPermisos_catEmpleado" />
+        <AssociationConnector Association="dbCITEmpleadoModel.AspNetUserRoles" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

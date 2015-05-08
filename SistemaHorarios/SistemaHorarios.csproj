@@ -428,6 +428,7 @@
     <Content Include="Views\PanelControl\FormCalendario.cshtml" />
     <Content Include="Views\PanelControl\AgendarPermiso.cshtml" />
     <Content Include="Views\Shared\ExitoNoLayout.cshtml" />
+    <Content Include="Views\Configuracion\FrmEditarCategoria.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

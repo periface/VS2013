@@ -1,4 +1,5 @@
-﻿@using SistemaHorarios.Helpers
+﻿@model IEnumerable<SERVICIOS.Models.MCategoria>
+@using SistemaHorarios.Helpers
 @{
     ViewBag.Title = "CategoriasEmpleados";
 }
@@ -7,4 +8,51 @@
         @Html.MenuConfiguracion(User)
     </div>
 </div>
-
+<div id="frm" class="row">
+    <div class=" col-lg-8">
+        <h2>Categorias de Empleados</h2>
+        @foreach (var item in Model)
+        {
+            <ul class="list-group">
+                <li class="list-group-item active">Nombre de categoria : @item.nomCategoria <a data-id="@item.idCategoria" class="btn btn-success editar">Editar Categoria</a>  <a data-id="@item.idCategoria" class="btn btn-success eliminar">Eliminar Categoria</a></li>
+                <li class="list-group-item">Hora de entrada asignada : @item.hraEntAsignada</li>
+                <li class="list-group-item">Hora de Salida asignada : @item.hraSalAsignada</li>
+            </ul>
+        }
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" id="modalCategorias" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Configuración de Categorias</h4>
+            </div>
+            <div class="modal-body" id="modalContenedor">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $(function () {
+            var $linkEditar = $(".editar");
+            var $modal = $("#modalCategorias");
+            var $contenedor = $("#modalContenedor");
+            var cargaModalEdicion = function (id) {
+                $contenedor.load("/Configuracion/FrmEditarCategoria/" + id, function () {
+                    $modal.modal("show");
+                });
+            }
+            $linkEditar.click(function () {
+                var id = $(this).data("id");
+                cargaModalEdicion(id);
+            });
+            
+        });
+        
+    </script>
+    }

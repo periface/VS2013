@@ -115,7 +115,7 @@
           <Key>
             <PropertyRef Name="idPermiso" />
           </Key>
-          <Property Name="idPermiso" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idPermiso" Type="int" Nullable="false" />
           <Property Name="motivoPermiso" Type="nvarchar" MaxLength="200" />
           <Property Name="observaciones" Type="nvarchar" MaxLength="250" />
           <Property Name="horaSalida" Type="datetime" />
@@ -123,16 +123,6 @@
           <Property Name="noEmpleado" Type="int" />
           <Property Name="autorizado" Type="bit" />
           <Property Name="fechaCreacion" Type="datetime" />
-        </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
         <Association Name="FK_catEmpleado_AspNetUsers">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
@@ -250,7 +240,6 @@
           <EntitySet Name="catFechasEspeciales" EntityType="Self.catFechasEspeciales" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="catHistorial" EntityType="Self.catHistorial" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="catPermisos" EntityType="Self.catPermisos" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_catEmpleado_AspNetUsers" Association="Self.FK_catEmpleado_AspNetUsers">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="catEmpleado" EntitySet="catEmpleado" />
@@ -298,7 +287,7 @@
           <EntitySet Name="catEmpleado" EntityType="dbCITEmpleadoModel.catEmpleado" />
           <EntitySet Name="catFechasEspeciales" EntityType="dbCITEmpleadoModel.catFechasEspeciales" />
           <EntitySet Name="catHistorial" EntityType="dbCITEmpleadoModel.catHistorial" />
-          <EntitySet Name="sysdiagrams" EntityType="dbCITEmpleadoModel.sysdiagrams" />
+          <EntitySet Name="catPermisos" EntityType="dbCITEmpleadoModel.catPermisos" />
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="dbCITEmpleadoModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
@@ -319,14 +308,13 @@
             <End Role="catEmpleado" EntitySet="catEmpleado" />
             <End Role="catHistorial" EntitySet="catHistorial" />
           </AssociationSet>
-          <AssociationSet Name="AspNetUserRoles" Association="dbCITEmpleadoModel.AspNetUserRoles">
-            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-          </AssociationSet>
-          <EntitySet Name="catPermisos" EntityType="dbCITEmpleadoModel.catPermisos" />
           <AssociationSet Name="FK_catPermisos_catEmpleado" Association="dbCITEmpleadoModel.FK_catPermisos_catEmpleado">
             <End Role="catEmpleado" EntitySet="catEmpleado" />
             <End Role="catPermisos" EntitySet="catPermisos" />
+          </AssociationSet>
+          <AssociationSet Name="AspNetUserRoles" Association="dbCITEmpleadoModel.AspNetUserRoles">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="C__MigrationHistory">
@@ -440,15 +428,19 @@
           <Property Name="fechaRegistro" Type="DateTime" Precision="0" />
           <NavigationProperty Name="catEmpleado" Relationship="dbCITEmpleadoModel.FK_catHistorial_catEmpleado" FromRole="catHistorial" ToRole="catEmpleado" />
         </EntityType>
-        <EntityType Name="sysdiagrams">
+        <EntityType Name="catPermisos">
           <Key>
-            <PropertyRef Name="diagram_id" />
+            <PropertyRef Name="idPermiso" />
           </Key>
-          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="idPermiso" Type="Int32" Nullable="false" />
+          <Property Name="motivoPermiso" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="observaciones" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="horaSalida" Type="DateTime" Precision="3" />
+          <Property Name="horaLlegada" Type="DateTime" Precision="3" />
+          <Property Name="noEmpleado" Type="Int32" />
+          <Property Name="autorizado" Type="Boolean" />
+          <Property Name="fechaCreacion" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="catEmpleado" Relationship="dbCITEmpleadoModel.FK_catPermisos_catEmpleado" FromRole="catPermisos" ToRole="catEmpleado" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Type="dbCITEmpleadoModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1">
@@ -514,24 +506,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="AspNetUserRoles">
-          <End Type="dbCITEmpleadoModel.AspNetRoles" Role="AspNetRoles" Multiplicity="*" />
-          <End Type="dbCITEmpleadoModel.AspNetUsers" Role="AspNetUsers" Multiplicity="*" />
-        </Association>
-        <EntityType Name="catPermisos">
-          <Key>
-            <PropertyRef Name="idPermiso" />
-          </Key>
-          <Property Name="idPermiso" Type="Int32" Nullable="false" />
-          <Property Name="motivoPermiso" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="observaciones" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="horaSalida" Type="DateTime" Precision="3" />
-          <Property Name="horaLlegada" Type="DateTime" Precision="3" />
-          <Property Name="noEmpleado" Type="Int32" />
-          <Property Name="autorizado" Type="Boolean" />
-          <Property Name="fechaCreacion" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="catEmpleado" Relationship="dbCITEmpleadoModel.FK_catPermisos_catEmpleado" FromRole="catPermisos" ToRole="catEmpleado" />
-        </EntityType>
         <Association Name="FK_catPermisos_catEmpleado">
           <End Type="dbCITEmpleadoModel.catEmpleado" Role="catEmpleado" Multiplicity="0..1" />
           <End Type="dbCITEmpleadoModel.catPermisos" Role="catPermisos" Multiplicity="*" />
@@ -543,6 +517,10 @@
               <PropertyRef Name="noEmpleado" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <Association Name="AspNetUserRoles">
+          <End Type="dbCITEmpleadoModel.AspNetRoles" Role="AspNetRoles" Multiplicity="*" />
+          <End Type="dbCITEmpleadoModel.AspNetUsers" Role="AspNetUsers" Multiplicity="*" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -654,25 +632,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="dbCITEmpleadoModel.sysdiagrams">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="definition" ColumnName="definition" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="name" ColumnName="name" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <AssociationSetMapping Name="AspNetUserRoles" TypeName="dbCITEmpleadoModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
-            <EndProperty Name="AspNetUsers">
-              <ScalarProperty Name="Id" ColumnName="UserId" />
-            </EndProperty>
-            <EndProperty Name="AspNetRoles">
-              <ScalarProperty Name="Id" ColumnName="RoleId" />
-            </EndProperty>
-          </AssociationSetMapping>
           <EntitySetMapping Name="catPermisos">
             <EntityTypeMapping TypeName="dbCITEmpleadoModel.catPermisos">
               <MappingFragment StoreEntitySet="catPermisos">
@@ -687,6 +646,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="dbCITEmpleadoModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+            <EndProperty Name="AspNetUsers">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+            <EndProperty Name="AspNetRoles">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

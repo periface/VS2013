@@ -12,7 +12,7 @@ var cambiosGuardados = function () {
     $("#modalCategorias").modal("hide");
     $.notify({
         // options
-        message: 'Cambios Guardados (Es necesario <a href="/Configuracion/CategoriasEmpleados">actualizar la pagina</a>)'
+        message: 'Cambios Guardados (Posiblemente sera necesario <a href="/Configuracion/CategoriasEmpleados">actualizar la pagina</a>)'
     }, {
         // settings
         type: 'success'

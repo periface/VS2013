@@ -5,7 +5,7 @@
 }
 @using (Ajax.BeginForm("FrmEditarCategoria", new AjaxOptions { UpdateTargetId="frm",InsertionMode = InsertionMode.Replace,HttpMethod = "Post" }))
 {
-    <div class="row">
+    <div id="frm" class="row">
         <div class="col-lg-12">
             <h3>Editar Categoria</h3>
             <div class="form-group">

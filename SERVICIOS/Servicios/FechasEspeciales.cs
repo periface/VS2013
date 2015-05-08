@@ -19,7 +19,7 @@ namespace SERVICIOS.Servicios
         public FechasEspeciales()
             : this(new RepositorioGenerico<catFechasEspeciales, dbCITEmpleadoEntities>())
         {
-
+            
         }
 
         public void GuardarFecha(MFechaEspecial model)
@@ -34,6 +34,8 @@ namespace SERVICIOS.Servicios
                 tipo = model.tipo,
                 titulo = model.titulo,
                 todoElDia = model.todoElDia,
+                ignorarHorario = model.ignorarHorario,
+                
 
             };
             _FechasEspeciales.GuardarRegistro(nuevaFecha);
@@ -44,6 +46,13 @@ namespace SERVICIOS.Servicios
             var original = _FechasEspeciales.CargaRegistro(a => a.id == model.id).SingleOrDefault();
             original.inicio = model.inicio;
             original.fin = model.fin;
+            original.clase = cssClass(model.tipo);
+            original.descripcion = model.descripcion;
+            original.id = model.id;
+            original.ignorarHorario = model.ignorarHorario;
+            original.tipo = model.tipo;
+            original.titulo = model.titulo;
+            original.todoElDia = model.todoElDia;
             _FechasEspeciales.EditarRegistro(original);
         }
 
@@ -75,6 +84,9 @@ namespace SERVICIOS.Servicios
                         fechaInicio = stringFechaInicio,
                         descripcion = item.descripcion,
                         ignorarHorario = item.ignorarHorario.Value,
+                        tipo = item.tipo.Value,
+                        endd = item.fin.Value,
+                        startd = item.inicio.Value
                     });
 
                 }
@@ -98,14 +110,17 @@ namespace SERVICIOS.Servicios
                     {
                         allDay = item.todoElDia.Value,
                         className = item.clase,
-                        end = stringFechaFin.ToString("yyyy-MM-ddTHH:mm:ss"), //Formato obligatorio para full calendar
+                        end = stringFechaFin.ToString("yyyy-MM-ddTHH:mm:ss"),
                         id = item.id,
                         start = stringFechaInicio.ToString("yyyy-MM-ddTHH:mm:ss"),
                         title = item.titulo,
                         fechaFin = stringFechaFin,
                         fechaInicio = stringFechaInicio,
                         descripcion = item.descripcion,
-                        ignorarHorario = item.ignorarHorario.Value
+                        ignorarHorario = item.ignorarHorario.Value,
+                        tipo = item.tipo.Value,
+                        endd = item.fin.Value,
+                        startd = item.inicio.Value
                     });
                 }
             }

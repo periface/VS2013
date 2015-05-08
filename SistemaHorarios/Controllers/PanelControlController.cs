@@ -263,6 +263,7 @@ namespace SistemaHorarios.Controllers
             if (permitePermisos()) {
                 var id = User.Identity.GetUserId();
                 var empleado = _Empleado.CargarEmpleados(a => a.AspNetUsers.Id == id).SingleOrDefault();
+                if (empleado == null) { ViewBag.error = "No ha capturado los datos de el usuario ó este usuario no fue encontrado"; return View("ErrorNoLayout"); }
                 if (hayPermisosAbiertos(empleado.noEmpleado)) {
                     ViewBag.error = "Usted tiene un permiso pendiente";
                     return PartialView("ErrorNoLayout");
@@ -487,7 +488,7 @@ namespace SistemaHorarios.Controllers
             var permisos = _Permisos.CargaPermiso(a=>a.noEmpleado==noEmpleado);
             foreach (var item in permisos.Where(a=>a.horaSalida.ToShortDateString()==actual.ToShortDateString()))
             {
-                if (item.horaLlegada != null)
+                if (item.horaLlegada == null)
                 {
                     return false;
                 }

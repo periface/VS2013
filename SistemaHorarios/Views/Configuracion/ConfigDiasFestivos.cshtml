@@ -29,7 +29,20 @@
             <p>Si lo desea tambien puede seleccionar multiples fechas</p>
             <p>Para editar el evento de una fecha deseada seleccionelo y modifique los campos</p>
         </div>
-        
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Significado de colores</h3>
+                <div class="diaFestivo text-center" style="width:auto; height:30px">
+                    Dia festivo.
+                </div>
+                <div class="laborForzosa text-center" style="width:auto; height:30px">
+                    Fin de semana forzado.
+                </div>
+                <div class="noPermisos text-center" style="width:auto; height:30px">
+                    Dia sin permisos.
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-lg-8">
         <div id="calendario"></div>
@@ -38,30 +51,9 @@
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    @using (Ajax.BeginForm("FormularioFechas", new AjaxOptions { HttpMethod = "Post" }))
-    {
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Fecha especial</h4>
-                </div>
-
-
-                <div class="modal-body" id="contenedorFormulario">
-
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" id="btnAceptar" class="btn btn-primary">Guardar Fecha</button>
-                </div>
-            </div>
-        </div>
-    }
+    
 </div>
 <div class="modal fade" id="modalDetalle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -82,7 +74,6 @@
 </div>
 @section Scripts{
     <script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
-    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/Scripts/Bootstrap%20DatePicker/bootstrap-datepicker.js"></script>
     <script src="~/Scripts/Bootstrap%20DatePicker/locales/bootstrap-datepicker.es.js"></script>
     <script src="~/Scripts/FullCalendar/moment.min.js"></script>
@@ -91,7 +82,7 @@
     <script>
         //DECLARACIONES
         var $modal = $("#myModal");
-        var $contenedor = $("#contenedorFormulario");
+        var $contenedor = $("#myModal");
         var $modalDetalle = $("#modalDetalle");
         var $contenedorDetalle = $("#contenedorDetalle");
         var $calendario = $("#calendario");
@@ -135,6 +126,8 @@
             });
         }
         var modificado = function () {
+            $modalDetalle.modal("hide");
+            refresh();
             $.notify({
                 // options
                 message: 'Fecha Modificada'

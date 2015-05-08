@@ -55,7 +55,6 @@ var noRegistroEntrada = function () {
         type: 'danger'
     });
 }
-
 var checkadoSalida = function () {
     $.notify({
         // options
@@ -108,4 +107,11 @@ var festivo = function () {
         type: 'danger'
     });
 }
-
+var editarEvento = function (id) {
+    $("#contenedorDetalle").load("/Configuracion/ModificarEvento/"+id);
+}
+$("body").on("click", "#btnEditar", function () {
+    console.log("Ok");
+    var id = $(this).data("id");
+    editarEvento(id);
+});

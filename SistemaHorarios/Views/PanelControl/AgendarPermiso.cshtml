@@ -1,5 +1,5 @@
 ﻿@model SERVICIOS.Models.MPermiso
-           @using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity;
 @{
     ViewBag.Title = "AgendarPermiso";
     Layout = null;
@@ -7,7 +7,7 @@
 <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
 @using (Ajax.BeginForm("AgendarPermiso", new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "form" }))
 {
-    
+
     <div id="form" class="row">
         <div class="col-lg-6">
             <h2>Agendar Permiso</h2>
@@ -48,7 +48,9 @@
             locale: "es",
             widgetPositioning: {
                 horizontal: 'right',
-                vertical:'bottom'
+                vertical: 'bottom',
+                format: 'yy-mm-yyyy',
+                extraFormats: ['dd-mm-yyyy']
             }
         });
     })

@@ -7,14 +7,15 @@
       <Diagram DiagramId="aad266008c97401d82af6763a670441b" Name="Diagram1" ZoomLevel="29">
         <EntityTypeShape EntityType="dbCITEmpleadoModel.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="dbCITEmpleadoModel.AspNetRoles" Width="1.5" PointX="0.75" PointY="6" />
-        <EntityTypeShape EntityType="dbCITEmpleadoModel.AspNetUserClaims" Width="1.5" PointX="5.25" PointY="4.625" />
-        <EntityTypeShape EntityType="dbCITEmpleadoModel.AspNetUserLogins" Width="1.5" PointX="5.25" PointY="13.75" />
+        <EntityTypeShape EntityType="dbCITEmpleadoModel.AspNetUserClaims" Width="1.5" PointX="5.25" PointY="13.5" />
+        <EntityTypeShape EntityType="dbCITEmpleadoModel.AspNetUserLogins" Width="1.5" PointX="5.25" PointY="4.625" />
         <EntityTypeShape EntityType="dbCITEmpleadoModel.AspNetUsers" Width="1.5" PointX="3" PointY="4.75" />
         <EntityTypeShape EntityType="dbCITEmpleadoModel.catCategorias" Width="1.5" PointX="3" PointY="9.875" />
-        <EntityTypeShape EntityType="dbCITEmpleadoModel.catEmpleado" Width="1.5" PointX="5.25" PointY="8.25" />
+        <EntityTypeShape EntityType="dbCITEmpleadoModel.catEmpleado" Width="1.5" PointX="5.25" PointY="7.25" />
         <EntityTypeShape EntityType="dbCITEmpleadoModel.catFechasEspeciales" Width="1.5" PointX="2.75" PointY="0.75" />
-        <EntityTypeShape EntityType="dbCITEmpleadoModel.catHistorial" Width="1.5" PointX="7.5" PointY="7" />
-        <EntityTypeShape EntityType="dbCITEmpleadoModel.catPermisos" Width="1.5" PointX="7.5" PointY="9.875" />
+        <EntityTypeShape EntityType="dbCITEmpleadoModel.catHistorial" Width="1.5" PointX="7.5" PointY="6" />
+        <EntityTypeShape EntityType="dbCITEmpleadoModel.catPermisos" Width="1.5" PointX="7.5" PointY="8.875" />
+        <EntityTypeShape EntityType="dbCITEmpleadoModel.sysdiagrams" Width="1.5" PointX="4.75" PointY="0.75" />
         <AssociationConnector Association="dbCITEmpleadoModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="dbCITEmpleadoModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="dbCITEmpleadoModel.FK_catEmpleado_AspNetUsers" />

@@ -35,5 +35,6 @@ namespace DAL
         public virtual DbSet<catFechasEspeciales> catFechasEspeciales { get; set; }
         public virtual DbSet<catHistorial> catHistorial { get; set; }
         public virtual DbSet<catPermisos> catPermisos { get; set; }
+        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
     }
 }

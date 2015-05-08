@@ -5,30 +5,40 @@
 }
 <div id="form" class="row">
     <div class="col-lg-12">
-        @foreach (var item in Model)
+        @if (Model.Count() > 0)
         {
-            <ul class="list-group">
-                <li class="list-group-item active">Fecha de Creación : @item.fechaCreacion.ToUniversalTime()</li>
-                <li class="list-group-item">Motivo del Permiso : @item.motivoPermiso</li>
-                <li class="list-group-item">Hora de salida : @item.horaSalida.ToUniversalTime()</li>
-                @if (item.horaLlegada == null)
-                {
-                    using (Ajax.BeginForm("CerrarPermiso", new AjaxOptions { InsertionMode = InsertionMode.Replace, HttpMethod = "Post", UpdateTargetId = "form" }))
+            foreach (var item in Model)
+            {
+                <ul class="list-group">
+                    <li class="list-group-item active">Fecha de Creación : @item.fechaCreacion.ToShortTimeString()</li>
+                    <li class="list-group-item">Motivo del Permiso : @item.motivoPermiso</li>
+                    <li class="list-group-item">Hora de salida : @item.horaSalida.ToShortTimeString()</li>
+                    @if (item.horaLlegada == null)
+                    {
+                        using (Ajax.BeginForm("CerrarPermiso", new AjaxOptions { InsertionMode = InsertionMode.Replace, HttpMethod = "Post", UpdateTargetId = "form" }))
+                        {
+                            <li class="list-group-item">
+                                <input type="hidden" value="@item.idPermiso" name="idPermiso" />
+                                <a id="mensaje" class="text-danger">Este permiso aún esta abierto</a> <input type="submit" id="btnCerrar" class="btn btn-sm btn-primary" value="Cerrar Permiso" />
+                            </li>
+                        }
+
+                    }
+                    else
                     {
                         <li class="list-group-item">
-                            <input type="hidden" value="@item.idPermiso" name="idPermiso" />
-                            <a id="mensaje" class="text-danger">Este permiso aún esta abierto</a> <input type="submit" id="btnCerrar" class="btn btn-sm btn-primary" value="Cerrar Permiso" />
+                            Hora de llegada : @item.horaLlegada.Value.ToShortTimeString() <text class="text-success">Permiso Cerrado</text>
                         </li>
                     }
 
-                }
-                else
-                {
-                    <li class="list-group-item">
-                        Hora de llegada : @item.horaLlegada <text class="text-success">Permiso Cerrado</text>
-                    </li>
-                }
-
+                </ul>
+            }
+        }
+        else { 
+            <ul class="list-group">
+                <li class="list-group-item">
+                    No hay permisos en este dia
+                </li>
             </ul>
         }
     </div>

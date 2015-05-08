@@ -28,5 +28,6 @@ namespace SERVICIOS.Models
         [Display(Name = "Esta restricción o fecha especial dura todo el dia")]
         public bool todoElDia { get; set; }
         public int tipo { get; set; }
+        public bool ignorarHorario { get; set; }
     }
 }

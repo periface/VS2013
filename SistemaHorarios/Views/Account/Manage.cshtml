@@ -1,7 +1,7 @@
 ﻿@using SistemaHorarios.Models;
 @using Microsoft.AspNet.Identity;
 @{
-    ViewBag.Title = "Manage Account";
+    ViewBag.Title = "Manejo de cuenta";
 }
 
 <h2>@ViewBag.Title.</h2>
@@ -17,11 +17,10 @@
         {
             @Html.Partial("_SetPasswordPartial")
         }
-
-        <section id="externalLogins">
+        @*<section id="externalLogins">
             @Html.Action("RemoveAccountList")
             @Html.Partial("_ExternalLoginsListPartial", new { Action = "LinkLogin", ReturnUrl = ViewBag.ReturnUrl })
-        </section>
+        </section>*@
     </div>
 </div>
 @section Scripts {

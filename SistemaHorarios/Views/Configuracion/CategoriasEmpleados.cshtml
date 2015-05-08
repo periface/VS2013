@@ -11,6 +11,7 @@
 <div id="frm" class="row">
     <div class=" col-lg-8">
         <h2>Categorias de Empleados</h2>
+        <a class="btn btn-success" id="nuevo">Nueva Categoria</a><br /><br />
         @foreach (var item in Model)
         {
             <ul class="list-group">
@@ -40,6 +41,7 @@
     <script>
         $(function () {
             var $linkEditar = $(".editar");
+            var $linkNuevo = $("#nuevo");
             var $modal = $("#modalCategorias");
             var $contenedor = $("#modalContenedor");
             var cargaModalEdicion = function (id) {
@@ -47,9 +49,17 @@
                     $modal.modal("show");
                 });
             }
+            var cargaModalNuevo = function () {
+                $contenedor.load("/Configuracion/FrmNuevaCategoria/", function () {
+                    $modal.modal("show");
+                });
+            }
             $linkEditar.click(function () {
                 var id = $(this).data("id");
                 cargaModalEdicion(id);
+            });
+            $linkNuevo.click(function () {
+                cargaModalNuevo();
             });
             
         });

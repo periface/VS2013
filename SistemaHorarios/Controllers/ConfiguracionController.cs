@@ -25,6 +25,16 @@ namespace SistemaHorarios.Controllers
         public ActionResult FrmNuevaCategoria() {
             return View();
         }
+        [HttpPost]
+        public ActionResult FrmNuevaCategoria(MCategoria model) {
+            if (Request.IsAjaxRequest()) {
+                if (ModelState.IsValid) {
+                    _Categorias.GuardarCategoria(model);
+                    return JavaScript("cambiosGuardados();");
+                }
+            }
+            return PartialView();
+        }
         public ActionResult FrmEditarCategoria(int id) {
             var categoria = _Categorias.CargarCategorias(a=>a.idCategoria==id);
 

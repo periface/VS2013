@@ -429,6 +429,7 @@
     <Content Include="Views\PanelControl\AgendarPermiso.cshtml" />
     <Content Include="Views\Shared\ExitoNoLayout.cshtml" />
     <Content Include="Views\Configuracion\FrmEditarCategoria.cshtml" />
+    <Content Include="Views\Configuracion\FrmNuevaCategoria.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

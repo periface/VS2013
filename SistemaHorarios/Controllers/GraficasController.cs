@@ -18,9 +18,10 @@ namespace SistemaHorarios.Controllers
             var model = _Graficas.GraficaRendimientoUsuario(id,Inicio,Fin);
             return Json(model,JsonRequestBehavior.AllowGet);
         }
-        //public ActionResult Permisos(int id, DateTime? Inicio, DateTime? Fin) {
-        //    var model = _Graficas.GraficaPermisos(id,Inicio,Fin);
-        //    return Json(model,JsonRequestBehavior.AllowGet);
-        //}
+        public ActionResult PromedioMensual(int id, DateTime? Inicio, DateTime? Fin)
+        {
+            var model = _Graficas.GraficaPromedioMensual(id, Inicio, Fin);
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
 	}
 }

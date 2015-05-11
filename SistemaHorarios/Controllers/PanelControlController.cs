@@ -113,12 +113,14 @@ namespace SistemaHorarios.Controllers
         public ActionResult Permisos(DateTime? fecha, int id)
         {
             //TODO Vista parcial de los permisos agendados, en un modal (posibles acciones adicionales dentro del mismo)
-            var permisos = _Permisos.CargaPermiso(a=>a.noEmpleado==id);
-            var permisosActual = permisos.Where(a=>a.horaSalida.ToShortDateString() == fecha.Value.ToShortDateString());
+            var permisos = _Permisos.CargaPermiso(a => a.noEmpleado == id);
+            var permisosActual = permisos.Where(a => a.horaSalida.ToShortDateString() == fecha.Value.ToShortDateString());
             return View(permisosActual);
         }
-        public ActionResult CerrarPermiso(int idPermiso) {
-            if (Request.IsAjaxRequest()) {
+        public ActionResult CerrarPermiso(int idPermiso)
+        {
+            if (Request.IsAjaxRequest())
+            {
                 var permiso = _Permisos.CargaPermiso(a => a.idPermiso == idPermiso).SingleOrDefault();
                 permiso.horaLlegada = DateTime.Now;
                 _Permisos.EditarPermiso(permiso);
@@ -159,7 +161,7 @@ namespace SistemaHorarios.Controllers
             var historial = _Historial.CargaHistorial(a => a.catEmpleado.AspNetUsers.Id == id);
             return View(historial);
         }
-        
+
         public ActionResult Perfil()
         {
             var id = User.Identity.GetUserId();
@@ -260,17 +262,20 @@ namespace SistemaHorarios.Controllers
         }
         public ActionResult AgendarPermiso()
         {
-            if (permitePermisos()) {
+            if (permitePermisos())
+            {
                 var id = User.Identity.GetUserId();
                 var empleado = _Empleado.CargarEmpleados(a => a.AspNetUsers.Id == id).SingleOrDefault();
                 if (empleado == null) { ViewBag.error = "No ha capturado los datos de el usuario ó este usuario no fue encontrado"; return View("ErrorNoLayout"); }
-                if (hayPermisosAbiertos(empleado.noEmpleado)) {
+                if (hayPermisosAbiertos(empleado.noEmpleado))
+                {
                     ViewBag.error = "Usted tiene un permiso pendiente";
                     return PartialView("ErrorNoLayout");
                 }
                 return View();
             }
-            else{
+            else
+            {
                 ViewBag.error = "Este dia no se permiten permisos";
                 return PartialView("ErrorNoLayout");
             }
@@ -278,10 +283,12 @@ namespace SistemaHorarios.Controllers
         [HttpPost]
         public ActionResult AgendarPermiso(MPermiso model)
         {
-            if (ModelState.IsValid) {
-                if (Request.IsAjaxRequest()) {
+            if (ModelState.IsValid)
+            {
+                if (Request.IsAjaxRequest())
+                {
                     var id = User.Identity.GetUserId();
-                    var empleado = _Empleado.CargarEmpleados(a=>a.AspNetUsers.Id==id).SingleOrDefault();
+                    var empleado = _Empleado.CargarEmpleados(a => a.AspNetUsers.Id == id).SingleOrDefault();
                     model.noEmpleado = empleado.noEmpleado;
                     model.autorizacion = false;
                     _Permisos.GuardarPermiso(model);
@@ -387,7 +394,7 @@ namespace SistemaHorarios.Controllers
                     {
                         registro = historial.Where(a => a.hraSalida.HasValue
                             && a.hraSalida.Value.TimeOfDay >= horaSalida.Value
-                            || a.fechaRegistro.ToShortDateString() == DateTime.Now.ToShortDateString()).SingleOrDefault();
+                            && a.fechaRegistro.ToShortDateString() == DateTime.Now.ToShortDateString()).SingleOrDefault();
                     }
                 }
             }
@@ -471,8 +478,7 @@ namespace SistemaHorarios.Controllers
         {
             var actual = DateTime.Now;
             var fechaSinPermisos = _Fechas.CargarFechas(a => a.tipo == 3);
-            foreach (var item in fechaSinPermisos.Where(a => a.fechaInicio.ToShortDateString() == actual.ToShortDateString()
-                && a.fechaFin.ToShortDateString() == actual.ToShortDateString()))
+            foreach (var item in fechaSinPermisos.Where(a => a.fechaInicio.ToShortDateString() == actual.ToShortDateString()))
             {
                 var inicio = item.fechaInicio;
                 var fin = item.fechaFin;
@@ -483,16 +489,18 @@ namespace SistemaHorarios.Controllers
             }
             return true;
         }
-        public bool hayPermisosAbiertos(int noEmpleado) {
+        public bool hayPermisosAbiertos(int noEmpleado)
+        {
             var actual = DateTime.Now;
-            var permisos = _Permisos.CargaPermiso(a=>a.noEmpleado==noEmpleado);
-            foreach (var item in permisos.Where(a=>a.horaSalida.ToShortDateString()==actual.ToShortDateString()&&a.horaLlegada==null))
+            var permisos = _Permisos.CargaPermiso(a => a.noEmpleado == noEmpleado);
+            foreach (var item in permisos.Where(a => a.horaSalida.ToShortDateString() == actual.ToShortDateString() && a.horaLlegada == null))
             {
                 if (item.horaLlegada != null)
                 {
                     return false;
                 }
-                else {
+                else
+                {
                     return true;
                 }
             }

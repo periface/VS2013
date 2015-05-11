@@ -8,6 +8,10 @@ namespace SERVICIOS.HighChartsModel //Si se exporta cambiar esta linea
 {
     public class barModel
     {
+        /// <summary>
+        /// Helper Id
+        /// </summary>
+        public int id { get; set; }
         public chart chart { get; set; }
         ///Barras modelo basico
         public title title { get; set; }
@@ -18,6 +22,7 @@ namespace SERVICIOS.HighChartsModel //Si se exporta cambiar esta linea
         public legend legend { get; set; }
         public credits credits { get; set; }
         public series[] series { get; set; }
+        
     }
     public class chart {
         public string type { get; set; }
@@ -90,6 +95,7 @@ namespace SERVICIOS.HighChartsModel //Si se exporta cambiar esta linea
     public class series {
         public string name { get; set; }
         public double[] data { get; set; }
+        public string type { get; set; }
     }
     
 }

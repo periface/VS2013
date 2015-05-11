@@ -33,7 +33,7 @@
                 <div class="form-group">
                     <button id="filtro" class="btn btn-success" >Filtrar</button>
                 </div>
-                <div id="container"></div>
+                <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 <div id="container2"></div>
             </div>
         </div>
@@ -97,7 +97,7 @@
                 },
                 tooltip: {
                     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                    pointFormat: '<tr><td style="color:{series.color};padding:0"><a href="#"> {series.name}: </td>' +
+                    pointFormat: '<tr><td style="color:{series.color};padding:0"><a href="/EditarUsuario/?ref='+data.id+'"> {series.name}: </td>' +
                         '<td style="padding:0"><b>{point.y:.1f} hrs.</b></td></tr>',
                     footerFormat: '</table>',
                     shared: true,

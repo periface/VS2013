@@ -77,7 +77,7 @@ namespace SERVICIOS.Servicios
             }; 
             
             graficaColumna.title = new title() { 
-                text = "Grafica de Horas Trabajadas",
+                text = "Relación Horas Trabajadas/Horas no Trabajadas -Diarias-",
                 align = "Center"
             };
 
@@ -94,6 +94,7 @@ namespace SERVICIOS.Servicios
             foreach (var item in registros)
 	        {
 		            listaFechas.Add(item.fechaRegistro.Value.ToShortDateString());
+                    
 	        }
             graficaColumna.xAxis.categories = listaFechas.ToArray();
             graficaColumna.xAxis.title = new title() { 
@@ -103,9 +104,8 @@ namespace SERVICIOS.Servicios
             //FIN XAXIS ................ Doero De Bitch Na Kanojotachi ...................  
 
             //YAXIS
-            graficaColumna.yAxis.min = 0;
             graficaColumna.yAxis.title = new title();
-            graficaColumna.yAxis.title.text = "Horas Trabajadas";
+            graficaColumna.yAxis.title.text = "Horas";
             //FIN YAXIS
             graficaColumna.credits = new credits() { 
             enabled = false,
@@ -132,136 +132,57 @@ namespace SERVICIOS.Servicios
             series[] series = new series[graficaColumna.xAxis.categories.Length];
             series[] seriesPastel = new series[1];
             List<double> listaValores = new List<double>();
+            List<double> listaHorasPermiso = new List<double>();
             var listSeries = new List<series>();
+            
             foreach (var item in registros)
             {
-                if (item.hraSalida.HasValue) {
 
+                var _permisos = _Permisos.CargaRegistro(a=>a.catEmpleado.noEmpleado==item.noEmpleado);
+                var permisos = _permisos.Where(a => a.fechaCreacion.Value.ToShortDateString() == item.fechaRegistro.Value.ToShortDateString());
+                if (item.hraSalida.HasValue) {
                     double totalHoras = 0;
                     totalHoras = (item.hraSalida.Value-item.hraEntrada.Value).TotalHours;
                     listaValores.Add(totalHoras);
                 }
+                double totalHorasP = 0;
+                foreach (var permiso in permisos)
+                {
+                    if (permiso.horaLlegada.HasValue)
+                    {
+                        
+                        totalHorasP = (permiso.horaLlegada.Value - permiso.horaSalida.Value).TotalHours;
+                        
+                    }
+                }
+                listaHorasPermiso.Add(totalHorasP);
             }
+            
             listSeries.Add(new series { 
                 data = listaValores.ToArray(),
-                name = "Rendimiento de "+usuario.nomEmpleado+" "+ usuario.patEmpleado
+                name = "Horas trabajadas de " + usuario.nomEmpleado + " " + usuario.patEmpleado
+            });
+            listSeries.Add(new series
+            {
+                data = listaHorasPermiso.ToArray(),
+                name = "Horas no trabajadas de " + usuario.nomEmpleado + " " + usuario.patEmpleado
             });
             //listSeries.Add(new series {
             //    data = new double[] { 8,5 },
             //    name = "Relación Horas Trabajadas, Horas con Permiso"
             //});
             graficaColumna.series = listSeries.ToArray();
+            graficaColumna.id = noEMPLEADO;
             return graficaColumna;
         }
 
 
-        public barModel GraficaPermisos(int noEMPLEADO, DateTime? fechaInicio, DateTime? fechaFin)
+
+
+
+        public barModel GraficaPromedioMensual(int noEmpleado, DateTime? fechaInicio, DateTime? fechaFin)
         {
-            var usuario = _Empleados.CargaRegistro(a => a.noEmpleado == noEMPLEADO).SingleOrDefault();
-            IEnumerable<catPermisos> registros = _Permisos.CargaRegistro();
-            registros = registros.Where(a => a.noEmpleado == noEMPLEADO);
-            if (fechaFin.HasValue && fechaInicio.HasValue)
-            {
-                registros = registros.Where(a => a.horaSalida >= fechaInicio && a.horaLlegada <= fechaFin);
-            }
-            var graficaColumna = new barModel();
-            graficaColumna.chart = new chart()
-            {
-                type = "column",
-                zoomType = "xy"
-            };
-
-            graficaColumna.title = new title()
-            {
-                text = "Grafica de Horas en Permiso",
-                align = "Center"
-            };
-
-
-            graficaColumna.xAxis = new xAxis()
-            {
-
-                crosshair = true
-
-            };
-            graficaColumna.yAxis = new yAxis();
-            //XAXIS
-            var listaFechas = new List<string>();
-            foreach (var item in registros.ToList())
-            {
-                listaFechas.Add(item.fechaCreacion.Value.ToShortDateString());
-            }
-            var set = new HashSet<string>();
-            var duplicados = listaFechas.Where(x => !set.Add(x));
-            foreach (var duplicado in duplicados.ToList())
-            {
-                listaFechas.Remove(duplicado);
-            }
-            graficaColumna.xAxis.categories = listaFechas.ToArray();
-            graficaColumna.xAxis.title = new title()
-            {
-                text = "Fechas",
-
-            };
-            //FIN XAXIS ................ Doero De Bitch Na Kanojotachi ...................  
-
-            //YAXIS
-            graficaColumna.yAxis.min = 0;
-            graficaColumna.yAxis.title = new title();
-            graficaColumna.yAxis.title.text = "Horas no Trabajadas";
-            //FIN YAXIS
-            graficaColumna.credits = new credits()
-            {
-                enabled = false,
-
-            };
-            graficaColumna.legend = new legend()
-            {
-
-            };
-            //graficaColumna.tooltip = new tooltip() { 
-            //    footerFormat ="<span style='font-size:10px'>{point.key}</span><table>",
-            //    headerFormat = "<tr><td style='color:{series.color};padding:0'>{series.name}: </td>"+"<td style='padding:0'><b>{point.y:.1f} mm</b></td></tr>",
-            //    pointFormat = "</table>",
-            //    shared = true,
-            //    useHTML = true
-
-            //};
-            graficaColumna.plotOptions = new plotOptions();
-            graficaColumna.plotOptions.column = new column()
-            {
-                borderWidth = 0,
-                pointPadding = 0.2,
-
-            };
-
-            series[] series = new series[graficaColumna.xAxis.categories.Length];
-            series[] seriesPastel = new series[1];
-            
-            var listSeries = new List<series>();
-            List<double> listaValores = new List<double>();
-            foreach (var item in registros)
-            {
-                if (item.horaLlegada.HasValue)
-                {
-
-                    double totalHoras = 0;
-                    totalHoras = (item.horaLlegada.Value - item.horaSalida.Value).TotalHours;
-                    listaValores.Add(totalHoras);
-                }
-                
-            }
-            listSeries.Add(new series
-            {
-                data = listaValores.ToArray(),
-                name = "Rendimiento en este dia"
-            });
-            //listSeries.Add(new series {
-            //    data = new double[] { 8,5 },
-            //    name = "Relación Horas Trabajadas, Horas con Permiso"
-            //});
-            graficaColumna.series = listSeries.ToArray();
-            return graficaColumna;
+            throw new NotImplementedException();
         }
     }
 }

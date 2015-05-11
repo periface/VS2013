@@ -9,6 +9,6 @@ namespace SERVICIOS.Servicios
     public interface IGraficas
     {
         HighChartsModel.barModel GraficaRendimientoUsuario(int noEMPLEADO,DateTime? fechaInicio,DateTime? fechaFin);
-        HighChartsModel.barModel GraficaPermisos(int noEMPLEADO, DateTime? fechaInicio, DateTime? fechaFin);
+        HighChartsModel.barModel GraficaPromedioMensual(int noEmpleado, DateTime? fechaInicio, DateTime? fechaFin);
     }
 }

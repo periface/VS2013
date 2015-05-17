@@ -38,6 +38,7 @@
                 <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 <hr />
                 <div id="container2"></div>
+                <div id="container3"></div>
             </div>
         </div>
 
@@ -46,6 +47,7 @@
 @section Scripts{
     <script src="~/Scripts/Highcharts-4.1.5/js/highcharts.js"></script>
     <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script src="http://code.highcharts.com/modules/drilldown.js"></script>
     <script src="~/Scripts/Bootstrap%20DatePicker/bootstrap-datepicker.js"></script>
     <script src="~/Scripts/Bootstrap%20DatePicker/locales/bootstrap-datepicker.es.js"></script>
     <script>
@@ -59,8 +61,6 @@
             $("#filtro").click(function () {
                 cargaDatosIdFechas($("#noEmpleado").val(), $("#fechaInicio").val(), $("#fechaFin").val());
             });
-
-
             var cargaDatosId = function (id) {
                 $.getJSON("/Graficas/Index/" + id, function (data) {
                     console.log(data);
@@ -72,6 +72,12 @@
                     $('#container2').highcharts(graficaColumnas(data));
 
                 });
+                $.getJSON("/Graficas/GraficaCompleta/" + id, function (data) {
+                    console.log(data);
+                    $('#container3').highcharts(graficaColumnasDrill(data));
+
+                });
+                
             }
             var cargaDatosIdFechas = function (id, fechaInicio, fechaFin) {
                 console.log(fechaInicio);
@@ -84,7 +90,11 @@
                 $.getJSON(url2, { id: id, Inicio: fechaInicio, Fin: fechaFin }, function (data) {
                     $('#container2').highcharts(graficaColumnasNeg(data));
                 });
+                $.getJSON("/Graficas/GraficaCompleta/" + id, function (data) {
+                    console.log(data);
+                    $('#container3').highcharts(graficaColumnasDrill(data));
 
+                });
             }
             cargaDatosId($("#noEmpleado").val());
             ///Constructor de grafica
@@ -154,7 +164,48 @@
                     series: data.series
                 }
             }
-        });
+            var graficaColumnasDrill = function (data) {
 
+                return {
+                    chart: data.chart,
+
+                    title: data.title,
+
+                    xAxis: {
+                        categories: data.xAxis.categories,
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: data.yAxis.min,
+                        title: {
+                            text: data.yAxis.title.text
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0"><a href="#"> {series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.1f} hrs.</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series:[data.seriesDo],
+                    drilldown:  toObject(data.drillDown)
+                }
+            }
+        });
+        function toObject(arr) {
+            var rv = {};
+            for (var i = 0; i < arr.length; ++i)
+                if (arr[i] !== undefined) rv[i] = arr[i];
+            console.log(rv);
+            return rv;
+        }
     </script>
 }

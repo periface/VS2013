@@ -23,5 +23,13 @@ namespace SistemaHorarios.Controllers
             var model = _Graficas.GraficaPromedioMensual(id, Inicio, Fin);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult GraficaCompleta(int id) {
+            var model = _Graficas.GraficaAñoDrill(id);
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GraficaTodos() {
+            var model = _Graficas.GraficaTodosEmpleados();
+            return Json(model,JsonRequestBehavior.AllowGet);
+        }
 	}
 }

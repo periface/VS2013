@@ -22,7 +22,21 @@ namespace SERVICIOS.HighChartsModel //Si se exporta cambiar esta linea
         public legend legend { get; set; }
         public credits credits { get; set; }
         public series[] series { get; set; }
-        
+        public seriesDataObject seriesDo { get; set; }
+        public drilldown[] drillDown { get; set; }
+    }
+    public class barModelDataObject {
+        public int id { get; set; }
+        public chart chart { get; set; }
+        ///Barras modelo basico
+        public title title { get; set; }
+        public xAxis xAxis { get; set; }
+        public yAxis yAxis { get; set; }
+        public tooltip tooltip { get; set; }
+        public plotOptions plotOptions { get; set; }
+        public legend legend { get; set; }
+        public credits credits { get; set; }
+        public series[] series { get; set; }
     }
     public class chart {
         public string type { get; set; }
@@ -96,6 +110,26 @@ namespace SERVICIOS.HighChartsModel //Si se exporta cambiar esta linea
         public string name { get; set; }
         public double[] data { get; set; }
         public string type { get; set; }
+        public string id { get; set; }
+        public bool colorByPoint { get; set; } 
     }
-    
+    public class seriesDataObject
+    {
+        public string name { get; set; }
+        public string type { get; set; }
+        public bool colorByPoint { get; set; }
+        public data[] data { get; set; }
+        
+        
+    }
+    public class drilldown {
+        public string id { get; set; }
+        public Dictionary<string,double> data { get; set; }
+    }
+    public class data {
+        public string drilldown { get; set; }
+        public double y { get; set; }
+        public string name { get; set; }
+    }
+
 }

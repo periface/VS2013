@@ -16,6 +16,7 @@ namespace SistemaHorarios.Controllers
         private Categoria _Categoria = new Categoria();
         private FechasEspeciales _Fechas = new FechasEspeciales();
         private Permisos _Permisos = new Permisos();
+        private Graficas _Graficas = new Graficas();
         //
         // GET: /PanelControl/
         public ActionResult Index()

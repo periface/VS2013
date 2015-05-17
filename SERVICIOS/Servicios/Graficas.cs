@@ -138,8 +138,6 @@ namespace SERVICIOS.Servicios
 
             };
 
-            series[] series = new series[graficaColumna.xAxis.categories.Length];
-            series[] seriesPastel = new series[1];
             List<double> listaValores = new List<double>();
             List<double> listaHorasPermiso = new List<double>();
             var listSeries = new List<series>();
@@ -167,9 +165,9 @@ namespace SERVICIOS.Servicios
                 }
                 listaHorasPermiso.Add(totalHorasP);
             }
-
             listSeries.Add(new series
             {
+
                 data = listaValores.ToArray(),
                 name = "Horas trabajadas de " + usuario.nomEmpleado + " " + usuario.patEmpleado
             });
@@ -186,11 +184,6 @@ namespace SERVICIOS.Servicios
             graficaColumna.id = noEMPLEADO;
             return graficaColumna;
         }
-
-
-
-
-
         public barModel GraficaPromedioMensual(int noEMPLEADO, DateTime? fechaInicio, DateTime? fechaFin)
         {
 
@@ -202,7 +195,7 @@ namespace SERVICIOS.Servicios
             registros = registros.Where(a => a.noEmpleado == noEMPLEADO);
             CultureInfo ci = new CultureInfo("Es-Es");
             var r = from i in registros
-                    group i by ci.DateTimeFormat.GetMonthName(i.fechaRegistro.Value.Month).ToString() +" "+ i.fechaRegistro.Value.Year.ToString() into grp
+                    group i by ci.DateTimeFormat.GetMonthName(i.fechaRegistro.Value.Month).ToString() + " " + i.fechaRegistro.Value.Year.ToString() into grp
                     select new
                     {
                         mes = grp.Key,
@@ -320,6 +313,226 @@ namespace SERVICIOS.Servicios
             graficaColumna.id = noEMPLEADO;
             return graficaColumna;
 
+        }
+        public barModel GraficaAñoDrill(int noEMPLEADO)
+        {
+            //TODO: Simplificar codigo
+            var usuario = _Empleados.CargaRegistro(a => a.noEmpleado == noEMPLEADO).SingleOrDefault();
+            IEnumerable<catHistorial> registros = _Historial.CargaRegistro();
+            registros = registros.Where(a => a.noEmpleado == noEMPLEADO);
+            IEnumerable<catPermisos> permisos = _Permisos.CargaRegistro();
+            registros = registros.Where(a => a.noEmpleado == noEMPLEADO);
+            CultureInfo ci = new CultureInfo("Es-Es");
+            var r = from i in registros
+                    group i by i.fechaRegistro.Value.Year.ToString() into grp
+                    select new
+                    {
+                        año = grp.Key,
+                        prom = grp.Sum(c => (c.hraSalida.Value - c.hraEntrada.Value).TotalHours) / grp.Count()
+                    };
+            var rM = from i in registros
+                     group i by i.fechaRegistro.Value.Month.ToString() into grp
+                     select new
+                     {
+                         mes = grp.Key,
+                         prom = grp.Sum(c => (c.hraSalida.Value - c.hraEntrada.Value).TotalHours) / grp.Count()
+                     };
+            var graficaColumna = new barModel();
+            graficaColumna.chart = new chart()
+            {
+                type = "column",
+                zoomType = "xy"
+            };
+
+            graficaColumna.title = new title()
+            {
+                text = "Promedio de Horas Trabajadas",
+                align = "Center"
+            };
+
+
+            graficaColumna.xAxis = new xAxis()
+            {
+
+                crosshair = true
+
+            };
+            graficaColumna.yAxis = new yAxis();
+
+            //XAXIS
+            var listaFechas = new List<string>();
+            foreach (var item in r)
+            {
+                listaFechas.Add(item.año);
+
+            }
+            graficaColumna.xAxis.categories = listaFechas.ToArray();
+            graficaColumna.xAxis.title = new title()
+            {
+                text = "Fechas",
+
+            };
+            //FIN XAXIS ................ Doero De Bitch Na Kanojotachi ...................  
+
+            //YAXIS
+            graficaColumna.yAxis.title = new title();
+            graficaColumna.yAxis.title.text = "Horas";
+            //FIN YAXIS
+            graficaColumna.credits = new credits()
+            {
+                enabled = false,
+
+            };
+            graficaColumna.legend = new legend()
+            {
+
+            };
+            //graficaColumna.tooltip = new tooltip() { 
+            //    footerFormat ="<span style='font-size:10px'>{point.key}</span><table>",
+            //    headerFormat = "<tr><td style='color:{series.color};padding:0'>{series.name}: </td>"+"<td style='padding:0'><b>{point.y:.1f} mm</b></td></tr>",
+            //    pointFormat = "</table>",
+            //    shared = true,
+            //    useHTML = true
+
+            //};
+            graficaColumna.plotOptions = new plotOptions();
+            graficaColumna.plotOptions.column = new column()
+            {
+                borderWidth = 0,
+                pointPadding = 0.2,
+
+            };
+
+            seriesDataObject listaValores = new seriesDataObject();
+            List<drilldown> listaDrills = new List<drilldown>();
+            var data = new List<SERVICIOS.HighChartsModel.data>();
+            foreach (var item in r)
+            {
+                if (item.prom != 0)
+                {
+                    data.Add(new SERVICIOS.HighChartsModel.data()
+                    {
+                        name = item.año,
+                        drilldown = item.año,
+                        y = item.prom
+                    });
+                    listaValores.colorByPoint = true;
+                    listaValores.name = "Rendimiento General";
+                    listaValores.data = data.ToArray();
+                }
+                foreach (var itemDr in rM)
+                {
+
+                    if (itemDr.prom != 0)
+                    {
+                        Dictionary<string, double> dic = new Dictionary<string, double>();
+                        dic.Add(itemDr.mes, itemDr.prom);
+                        listaDrills.Add(new drilldown()
+                        {
+                            data = dic,
+                            id = item.año
+                        });
+                    }
+                }
+            }
+
+            graficaColumna.drillDown = listaDrills.ToArray();
+            //listSeries.Add(new series {
+            //    data = new double[] { 8,5 },
+            //    name = "Relación Horas Trabajadas, Horas con Permiso"
+            //});
+            graficaColumna.seriesDo = listaValores;
+            graficaColumna.id = noEMPLEADO;
+            return graficaColumna;
+        }
+        public barModel GraficaTodosEmpleados()
+        {
+            barModel graficaColumna = new barModel();
+            var usuarios = _Empleados.CargaRegistro();
+            var listaCategorias = new List<string>();
+            var listaSeries = new List<series>();
+            graficaColumna.chart = new chart()
+            {
+                type = "column",
+                zoomType = "xy"
+            };
+            graficaColumna.title = new title()
+            {
+                text = "Horas Trabajadas",
+                align = "Center"
+            };
+            graficaColumna.xAxis = new xAxis()
+            {
+                crosshair = true
+            };
+            graficaColumna.yAxis = new yAxis();
+            graficaColumna.xAxis.title = new title()
+            {
+                text = "Fechas",
+            };
+            graficaColumna.yAxis.title = new title();
+            graficaColumna.yAxis.title.text = "Horas";
+            //FIN YAXIS
+            graficaColumna.credits = new credits()
+            {
+                enabled = false,
+
+            };
+            graficaColumna.legend = new legend()
+            {
+
+            };
+            graficaColumna.plotOptions = new plotOptions();
+            graficaColumna.plotOptions.column = new column()
+            {
+                borderWidth = 0,
+                pointPadding = 0.2,
+
+            };
+            CultureInfo ci = new CultureInfo("Es-Es");
+            var rCategorias = from i in _Historial.CargaRegistro()
+                              group i by ci.DateTimeFormat.GetMonthName(i.fechaRegistro.Value.Month).ToString()
+                                  into gr
+                                  select new
+                                  {
+                                      mes = gr.Key
+                                  };
+
+            foreach (var item in rCategorias)
+            {
+                listaCategorias.Add(item.mes);
+
+            }
+            foreach (var empleado in usuarios)
+            {
+                var listaValores = new List<double>();
+                IEnumerable<catHistorial> historico = _Historial.CargaRegistro(a => a.catEmpleado.id == empleado.id);
+                
+                var r = from i in historico where i.hraSalida.HasValue && i.hraEntrada.HasValue
+                        group i by ci.DateTimeFormat.GetMonthName(i.fechaRegistro.Value.Month).ToString() into grp
+                        select new
+                        {
+                            mes = grp.Key,
+                            horasTrabajadas = historico.Where(a => a.hraSalida.HasValue && a.hraSalida.HasValue && ci.DateTimeFormat.GetMonthName(a.fechaRegistro.Value.Month).ToString() == grp.Key.ToString()).Sum(a => (a.hraSalida.Value - a.hraEntrada.Value).TotalHours)
+                        };
+
+                
+                foreach (var item in r)
+                {
+                    if (item.horasTrabajadas != 0) {
+                        listaValores.Add(item.horasTrabajadas);
+                    }
+                }
+                listaSeries.Add(new series()
+                {
+                    data = listaValores.ToArray(),
+                    name = empleado.nomEmpleado
+                });
+
+            }
+            graficaColumna.xAxis.categories = listaCategorias.ToArray();
+            graficaColumna.series = listaSeries.ToArray();
+            return graficaColumna;
         }
     }
 }

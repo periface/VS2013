@@ -491,7 +491,7 @@ namespace SERVICIOS.Servicios
             };
             CultureInfo ci = new CultureInfo("Es-Es");
             var rCategorias = from i in _Historial.CargaRegistro()
-                              group i by ci.DateTimeFormat.GetMonthName(i.fechaRegistro.Value.Month).ToString()
+                              group i by ci.DateTimeFormat.GetMonthName(i.fechaRegistro.Value.Month).ToString() +" " + i.fechaRegistro.Value.Year.ToString()
                                   into gr
                                   select new
                                   {

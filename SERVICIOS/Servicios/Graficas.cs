@@ -318,6 +318,7 @@ namespace SERVICIOS.Servicios
         {
             //TODO: Simplificar codigo
             var usuario = _Empleados.CargaRegistro(a => a.noEmpleado == noEMPLEADO).SingleOrDefault();
+            StringBuilder st = new StringBuilder(); 
             IEnumerable<catHistorial> registros = _Historial.CargaRegistro();
             registros = registros.Where(a => a.noEmpleado == noEMPLEADO);
             IEnumerable<catPermisos> permisos = _Permisos.CargaRegistro();
@@ -335,7 +336,8 @@ namespace SERVICIOS.Servicios
                      select new
                      {
                          mes = grp.Key,
-                         prom = grp.Sum(c => (c.hraSalida.Value - c.hraEntrada.Value).TotalHours) / grp.Count()
+                         prom = grp.Sum(c => (c.hraSalida.Value - c.hraEntrada.Value).TotalHours) / grp.Count(),
+                         año = grp.Sum(c => c.fechaRegistro.Value.Year)
                      };
             var graficaColumna = new barModel();
             graficaColumna.chart = new chart()
@@ -404,7 +406,6 @@ namespace SERVICIOS.Servicios
             };
 
             seriesDataObject listaValores = new seriesDataObject();
-            List<drilldown> listaDrills = new List<drilldown>();
             var data = new List<SERVICIOS.HighChartsModel.data>();
             foreach (var item in r)
             {
@@ -425,18 +426,23 @@ namespace SERVICIOS.Servicios
 
                     if (itemDr.prom != 0)
                     {
-                        Dictionary<string, double> dic = new Dictionary<string, double>();
-                        dic.Add(itemDr.mes, itemDr.prom);
-                        listaDrills.Add(new drilldown()
+                        if (item.año.ToString() != itemDr.año.ToString())
                         {
-                            data = dic,
-                            id = item.año
-                        });
+                            st.Append("[{");
+                            st.Append(Convert.ToChar(34)+"id"+Convert.ToChar(34)+":"+(2015).ToString()+",");
+                            st.Append(Convert.ToChar(34)+"data"+Convert.ToChar(34)+": [");
+                            st.Append(Convert.ToChar(34) + itemDr.mes + Convert.ToChar(34));
+                            st.Append(",");
+                            st.Append(itemDr.prom);
+                            st.Append("]");
+                            st.Append("}]");
+                        }
+
                     }
                 }
             }
 
-            graficaColumna.drillDown = listaDrills.ToArray();
+            graficaColumna.drillDown = st.ToString();
             //listSeries.Add(new series {
             //    data = new double[] { 8,5 },
             //    name = "Relación Horas Trabajadas, Horas con Permiso"
@@ -507,8 +513,9 @@ namespace SERVICIOS.Servicios
             {
                 var listaValores = new List<double>();
                 IEnumerable<catHistorial> historico = _Historial.CargaRegistro(a => a.catEmpleado.id == empleado.id);
-                
-                var r = from i in historico where i.hraSalida.HasValue && i.hraEntrada.HasValue
+
+                var r = from i in historico
+                        where i.hraSalida.HasValue && i.hraEntrada.HasValue
                         group i by ci.DateTimeFormat.GetMonthName(i.fechaRegistro.Value.Month).ToString() into grp
                         select new
                         {
@@ -516,10 +523,11 @@ namespace SERVICIOS.Servicios
                             horasTrabajadas = historico.Where(a => a.hraSalida.HasValue && a.hraSalida.HasValue && ci.DateTimeFormat.GetMonthName(a.fechaRegistro.Value.Month).ToString() == grp.Key.ToString()).Sum(a => (a.hraSalida.Value - a.hraEntrada.Value).TotalHours)
                         };
 
-                
+
                 foreach (var item in r)
                 {
-                    if (item.horasTrabajadas != 0) {
+                    if (item.horasTrabajadas != 0)
+                    {
                         listaValores.Add(item.horasTrabajadas);
                     }
                 }

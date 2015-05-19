@@ -74,7 +74,9 @@
                 });
                 $.getJSON("/Graficas/GraficaCompleta/" + id, function (data) {
                     console.log(data);
-                    $('#container3').highcharts(graficaColumnasDrill(data));
+                    var grafica = graficaColumnasDrill(data);
+                    console.log(grafica);
+                    $('#container3').highcharts(grafica);
 
                 });
                 
@@ -92,7 +94,9 @@
                 });
                 $.getJSON("/Graficas/GraficaCompleta/" + id, function (data) {
                     console.log(data);
-                    $('#container3').highcharts(graficaColumnasDrill(data));
+                    var grafica = graficaColumnasDrill(data);
+                    console.log(grafica);
+                    $('#container3').highcharts(grafica);
 
                 });
             }
@@ -165,7 +169,7 @@
                 }
             }
             var graficaColumnasDrill = function (data) {
-
+                var dSeries = JSON.parse(data.drillDown);
                 return {
                     chart: data.chart,
 
@@ -196,16 +200,15 @@
                         }
                     },
                     series:[data.seriesDo],
-                    drilldown:  toObject(data.drillDown)
+                    drilldown: {
+                        series: dSeries,
+                        activeAxisLabelStyle: {
+                            textDecoration: 'none',
+                            fontStyle: 'italic'
+                        },
+                    }
                 }
             }
         });
-        function toObject(arr) {
-            var rv = {};
-            for (var i = 0; i < arr.length; ++i)
-                if (arr[i] !== undefined) rv[i] = arr[i];
-            console.log(rv);
-            return rv;
-        }
     </script>
 }

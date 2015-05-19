@@ -429,7 +429,7 @@ namespace SERVICIOS.Servicios
                         if (item.año.ToString() != itemDr.año.ToString())
                         {
                             st.Append("[{");
-                            st.Append(Convert.ToChar(34)+"id"+Convert.ToChar(34)+":"+(2015).ToString()+",");
+                            st.Append(Convert.ToChar(34) + "id" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + (2015).ToString() + Convert.ToChar(34) + ",");
                             st.Append(Convert.ToChar(34)+"data"+Convert.ToChar(34)+": [");
                             st.Append(Convert.ToChar(34) + itemDr.mes + Convert.ToChar(34));
                             st.Append(",");

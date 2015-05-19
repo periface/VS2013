@@ -332,7 +332,7 @@ namespace SERVICIOS.Servicios
                         prom = grp.Sum(c => (c.hraSalida.Value - c.hraEntrada.Value).TotalHours) / grp.Count()
                     };
             var rM = from i in registros
-                     group i by i.fechaRegistro.Value.Month.ToString() into grp
+                     group i by ci.DateTimeFormat.GetMonthName(i.fechaRegistro.Value.Month).ToString() into grp
                      select new
                      {
                          mes = grp.Key,
@@ -430,11 +430,11 @@ namespace SERVICIOS.Servicios
                         {
                             st.Append("[{");
                             st.Append(Convert.ToChar(34) + "id" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + (2015).ToString() + Convert.ToChar(34) + ",");
-                            st.Append(Convert.ToChar(34)+"data"+Convert.ToChar(34)+": [");
+                            st.Append(Convert.ToChar(34)+"data"+Convert.ToChar(34)+": [[");
                             st.Append(Convert.ToChar(34) + itemDr.mes + Convert.ToChar(34));
                             st.Append(",");
                             st.Append(itemDr.prom);
-                            st.Append("]");
+                            st.Append("]]");
                             st.Append("}]");
                         }
 

@@ -421,25 +421,30 @@ namespace SERVICIOS.Servicios
                     listaValores.name = "Rendimiento General";
                     listaValores.data = data.ToArray();
                 }
-                foreach (var itemDr in rM)
+                foreach (var itema in r)
                 {
-
-                    if (itemDr.prom != 0)
+                    st.Append("[{");
+                    st.Append(Convert.ToChar(34) + "id" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + (2015).ToString() + Convert.ToChar(34) + ",");
+                    st.Append(Convert.ToChar(34) + "data" + Convert.ToChar(34) + ": [");
+                    foreach (var itemDr in rM)
                     {
-                        if (item.año.ToString() != itemDr.año.ToString())
-                        {
-                            st.Append("[{");
-                            st.Append(Convert.ToChar(34) + "id" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + (2015).ToString() + Convert.ToChar(34) + ",");
-                            st.Append(Convert.ToChar(34)+"data"+Convert.ToChar(34)+": [[");
-                            st.Append(Convert.ToChar(34) + itemDr.mes + Convert.ToChar(34));
-                            st.Append(",");
-                            st.Append(itemDr.prom);
-                            st.Append("]]");
-                            st.Append("}]");
-                        }
 
+                        if (itemDr.prom != 0)
+                        {
+
+                                st.Append("[");
+                                st.Append(Convert.ToChar(34) + itemDr.mes + Convert.ToChar(34));
+                                st.Append(",");
+                                st.Append(itemDr.prom);
+                                st.Append("]");
+                                st.Append(",");
+                        }
                     }
+
+                    st.Length--;
+                    st.Append("]}]");
                 }
+                
             }
 
             graficaColumna.drillDown = st.ToString();

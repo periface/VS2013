@@ -22,7 +22,7 @@ namespace SERVICIOS.HighChartsModel //Si se exporta cambiar esta linea
         public legend legend { get; set; }
         public credits credits { get; set; }
         public series[] series { get; set; }
-        public seriesDataObject seriesDo { get; set; }
+        public seriesDataObject[] seriesDo { get; set; }
         public string drillDown { get; set; }
     }
     public class barModelDataObject {
@@ -128,6 +128,7 @@ namespace SERVICIOS.HighChartsModel //Si se exporta cambiar esta linea
         public string drilldown { get; set; }
         public double y { get; set; }
         public string name { get; set; }
+        public string color { get; set; }
     }
 
 }

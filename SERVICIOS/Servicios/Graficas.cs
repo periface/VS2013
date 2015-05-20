@@ -341,6 +341,21 @@ namespace SERVICIOS.Servicios
                          prom = grp.Sum(c => (c.hraSalida.Value - c.hraEntrada.Value).TotalHours) / grp.Count(),
                          año = grp.Sum(c => c.fechaRegistro.Value.Year)
                      };
+            var rNo = from i in permisos
+                      group i by i.fechaCreacion.Value.Year into grp
+                      select new
+                      {
+                          año = grp.Key,
+                          prom = grp.Sum(c => (c.horaLlegada.Value - c.horaSalida.Value).TotalHours) / grp.Count()
+                      };
+            var rMNo = from i in permisos
+                       group i by ci.DateTimeFormat.GetMonthName(i.fechaCreacion.Value.Month).ToString() into grp
+                      select new
+                      {
+                          mes = grp.Key,
+                          prom = grp.Sum(c => (c.horaLlegada.Value - c.horaSalida.Value).TotalHours) / grp.Count()
+                      };
+
             //Creamos el nuevo objeto
             var graficaColumna = new barModel();
             graficaColumna.chart = new chart()
@@ -392,8 +407,22 @@ namespace SERVICIOS.Servicios
 
             };
 
-            seriesDataObject listaValores = new seriesDataObject();
+            var listaValores = new List<seriesDataObject>();
             var data = new List<SERVICIOS.HighChartsModel.data>();
+            var dataNo = new List<SERVICIOS.HighChartsModel.data>();
+            foreach (var item in rNo)
+            {
+                if (item.prom != 0)
+                {
+                    dataNo.Add(new data()
+                    {
+                        y = item.prom,
+                        color = "Black",
+                        drilldown = "no" + item.año
+                    });
+                }
+            }
+            st.Append("[");
             foreach (var item in r)
             {
                 if (item.prom != 0)
@@ -401,19 +430,61 @@ namespace SERVICIOS.Servicios
                     //Agregamos los años encontrados dentro de la variable r
                     data.Add(new SERVICIOS.HighChartsModel.data()
                     {
-                        name = "Promedio del año " + item.año,
+                        name = "Promedio de horas del año " + item.año,
                         drilldown = item.año, //El id del drilldown correspondera al año
-                        y = item.prom
+                        y = item.prom,
+                        color = "Green"
                     });
                 }
+                st.Append("{");
+                st.Append(Convert.ToChar(34) + "id" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + "no" + item.año + Convert.ToChar(34) + ",");
+                st.Append(Convert.ToChar(34) + "name" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + "Promedio Mensual de Horas no Trabajadas" + Convert.ToChar(34) + ",");
+                st.Append(Convert.ToChar(34) + "data" + Convert.ToChar(34) + ": [");
+                foreach (var itemNo in rMNo)
+                {
+                    //st.Append("{");
+                    //st.Append(Convert.ToChar(34) + "name" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + "Horas trabajadas diarias" + Convert.ToChar(34) + ",");
+                    //st.Append(Convert.ToChar(34) + "y" + Convert.ToChar(34) + ":" + itemDr.prom + ",");
+                    //st.Append(Convert.ToChar(34) + "drilldown" + Convert.ToChar(34) + ":" + Convert.ToChar(34)+ itemDr.mes+Convert.ToChar(34));
+
+                    //st.Append("}],{");
+                    //st.Append(Convert.ToChar(34) + "id" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + itemDr.mes + Convert.ToChar(34)+",");
+                    //st.Append(Convert.ToChar(34) + "data" + Convert.ToChar(34) + ": [");
+                    //foreach (var itemDias in registros)
+                    //{
+                    //    var total = (itemDias.hraEntrada.Value - itemDias.hraSalida.Value).TotalHours;
+                    //    st.Append("[");
+                    //    st.Append(Convert.ToChar(34) + itemDias.fechaRegistro.Value.ToShortDateString() + Convert.ToChar(34));
+                    //    st.Append(",");
+                    //    st.Append(total);
+                    //    st.Append("]");
+                    //    st.Append(",");
+                    //}
+                    //st.Length--;
+                    //st.Append("}]},");
+                    //Con este codigo solo trae 1 solo nivel
+                    if (itemNo.prom != 0)
+                    {
+
+                        st.Append("[");
+                        st.Append(Convert.ToChar(34) + itemNo.mes + Convert.ToChar(34));
+                        st.Append(",");
+                        st.Append(itemNo.prom);
+                        st.Append("]");
+                        st.Append(",");
+                    }
+
+                }
+                st.Length--;
                 //Este codigo apesta, gracias rectoria por la idea
                 //Creamos el inicio del json para el drilldown
-                st.Append("[{");
+                st.Append("]},{");
                 st.Append(Convert.ToChar(34) + "id" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + item.año + Convert.ToChar(34) + ",");
-                st.Append(Convert.ToChar(34) + "name" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + "Promedio Mensual" + Convert.ToChar(34) + ",");
+                st.Append(Convert.ToChar(34) + "name" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + "Promedio Mensual de Horas Trabajadas" + Convert.ToChar(34) + ",");
                 st.Append(Convert.ToChar(34) + "data" + Convert.ToChar(34) + ": [");
                 foreach (var itemDr in rM)
                 {
+                    //Posible MultiNivel
                     //st.Append("{");
                     //st.Append(Convert.ToChar(34) + "name" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + "Horas trabajadas diarias" + Convert.ToChar(34) + ",");
                     //st.Append(Convert.ToChar(34) + "y" + Convert.ToChar(34) + ":" + itemDr.prom + ",");
@@ -437,7 +508,7 @@ namespace SERVICIOS.Servicios
                     //Con este codigo solo trae 1 solo nivel
                     if (itemDr.prom != 0)
                     {
-                       
+
                         st.Append("[");
                         st.Append(Convert.ToChar(34) + itemDr.mes + Convert.ToChar(34));
                         st.Append(",");
@@ -448,19 +519,30 @@ namespace SERVICIOS.Servicios
 
                 }
                 st.Length--;
-                st.Append("]}]");
+                st.Append("]},");
 
             }
+            st.Length--;
+            st.Append("]");
+            listaValores.Add(new seriesDataObject()
+            {
 
-            listaValores.colorByPoint = true;
-            listaValores.name = "Promedio General";
-            listaValores.data = data.ToArray();
+                colorByPoint = true,
+                name = "Promedio General de Horas Trabajadas",
+                data = data.ToArray(),
+            });
+            listaValores.Add(new seriesDataObject()
+            {
+                colorByPoint = true,
+                name = "Promedio General de Horas No Trabajadas",
+                data = dataNo.ToArray()
+            });
             graficaColumna.drillDown = st.ToString();
             //listSeries.Add(new series {
             //    data = new double[] { 8,5 },
             //    name = "Relación Horas Trabajadas, Horas con Permiso"
             //});
-            graficaColumna.seriesDo = listaValores;
+            graficaColumna.seriesDo = listaValores.ToArray();
             graficaColumna.id = noEMPLEADO;
             return graficaColumna;
         }

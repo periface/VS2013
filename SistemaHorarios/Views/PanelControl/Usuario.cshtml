@@ -67,11 +67,11 @@
                     $('#container').highcharts(graficaColumnas(data));
 
                 });
-                $.getJSON("/Graficas/PromedioMensual/" + id, function (data) {
-                    console.log(data);
-                    $('#container2').highcharts(graficaColumnas(data));
+                //$.getJSON("/Graficas/PromedioMensual/" + id, function (data) {
+                //    console.log(data);
+                //    $('#container2').highcharts(graficaColumnas(data));
 
-                });
+                //});
                 $.getJSON("/Graficas/GraficaCompleta/" + id, function (data) {
                     console.log(data);
                     var grafica = graficaColumnasDrill(data);
@@ -89,9 +89,9 @@
                 $.getJSON(url, { id: id, Inicio: fechaInicio, Fin: fechaFin }, function (data) {
                     $('#container').highcharts(graficaColumnas(data));
                 });
-                $.getJSON(url2, { id: id, Inicio: fechaInicio, Fin: fechaFin }, function (data) {
-                    $('#container2').highcharts(graficaColumnasNeg(data));
-                });
+                //$.getJSON(url2, { id: id, Inicio: fechaInicio, Fin: fechaFin }, function (data) {
+                //    $('#container2').highcharts(graficaColumnasNeg(data));
+                //});
                 $.getJSON("/Graficas/GraficaCompleta/" + id, function (data) {
                     console.log(data);
                     var grafica = graficaColumnasDrill(data);
@@ -203,7 +203,7 @@
                     legend: {
                         enabled: false
                     },
-                    series:[data.seriesDo],
+                    series:data.seriesDo,
                     drilldown: {
                         series: dSeries,
                         activeAxisLabelStyle: {

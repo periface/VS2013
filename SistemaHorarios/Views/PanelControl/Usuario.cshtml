@@ -172,11 +172,12 @@
                 var dSeries = JSON.parse(data.drillDown);
                 return {
                     chart: data.chart,
-
+                    lang: {
+                        drillUpText: '<< Volver a {series.name}'
+                    },
                     title: data.title,
-
                     xAxis: {
-                        categories: data.xAxis.categories,
+                        categories: true,
                         crosshair: true
                     },
                     yAxis: {
@@ -199,6 +200,9 @@
                             borderWidth: 0
                         }
                     },
+                    legend: {
+                        enabled: false
+                    },
                     series:[data.seriesDo],
                     drilldown: {
                         series: dSeries,

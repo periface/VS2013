@@ -318,12 +318,13 @@ namespace SERVICIOS.Servicios
         {
             //TODO: Simplificar codigo
             var usuario = _Empleados.CargaRegistro(a => a.noEmpleado == noEMPLEADO).SingleOrDefault();
-            StringBuilder st = new StringBuilder(); 
+            StringBuilder st = new StringBuilder();
             IEnumerable<catHistorial> registros = _Historial.CargaRegistro();
             registros = registros.Where(a => a.noEmpleado == noEMPLEADO);
             IEnumerable<catPermisos> permisos = _Permisos.CargaRegistro();
             registros = registros.Where(a => a.noEmpleado == noEMPLEADO);
             CultureInfo ci = new CultureInfo("Es-Es");
+            //Obtenemos el los años y el promedio de ellos
             var r = from i in registros
                     group i by i.fechaRegistro.Value.Year.ToString() into grp
                     select new
@@ -331,6 +332,7 @@ namespace SERVICIOS.Servicios
                         año = grp.Key,
                         prom = grp.Sum(c => (c.hraSalida.Value - c.hraEntrada.Value).TotalHours) / grp.Count()
                     };
+            //Obtenemos el los meses y el promedio de ellos
             var rM = from i in registros
                      group i by ci.DateTimeFormat.GetMonthName(i.fechaRegistro.Value.Month).ToString() into grp
                      select new
@@ -339,6 +341,7 @@ namespace SERVICIOS.Servicios
                          prom = grp.Sum(c => (c.hraSalida.Value - c.hraEntrada.Value).TotalHours) / grp.Count(),
                          año = grp.Sum(c => c.fechaRegistro.Value.Year)
                      };
+            //Creamos el nuevo objeto
             var graficaColumna = new barModel();
             graficaColumna.chart = new chart()
             {
@@ -351,29 +354,17 @@ namespace SERVICIOS.Servicios
                 text = "Promedio de Horas Trabajadas",
                 align = "Center"
             };
-
-
             graficaColumna.xAxis = new xAxis()
             {
-
                 crosshair = true
-
             };
             graficaColumna.yAxis = new yAxis();
-
             //XAXIS
-            var listaFechas = new List<string>();
-            foreach (var item in r)
-            {
-                listaFechas.Add(item.año);
-
-            }
-            graficaColumna.xAxis.categories = listaFechas.ToArray();
             graficaColumna.xAxis.title = new title()
             {
                 text = "Fechas",
-
             };
+            graficaColumna.xAxis.type = "category";
             //FIN XAXIS ................ Doero De Bitch Na Kanojotachi ...................  
 
             //YAXIS
@@ -383,10 +374,6 @@ namespace SERVICIOS.Servicios
             graficaColumna.credits = new credits()
             {
                 enabled = false,
-
-            };
-            graficaColumna.legend = new legend()
-            {
 
             };
             //graficaColumna.tooltip = new tooltip() { 
@@ -411,42 +398,63 @@ namespace SERVICIOS.Servicios
             {
                 if (item.prom != 0)
                 {
+                    //Agregamos los años encontrados dentro de la variable r
                     data.Add(new SERVICIOS.HighChartsModel.data()
                     {
-                        name = item.año,
-                        drilldown = item.año,
+                        name = "Promedio del año " + item.año,
+                        drilldown = item.año, //El id del drilldown correspondera al año
                         y = item.prom
                     });
-                    listaValores.colorByPoint = true;
-                    listaValores.name = "Rendimiento General";
-                    listaValores.data = data.ToArray();
                 }
-                foreach (var itema in r)
+                //Este codigo apesta, gracias rectoria por la idea
+                //Creamos el inicio del json para el drilldown
+                st.Append("[{");
+                st.Append(Convert.ToChar(34) + "id" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + item.año + Convert.ToChar(34) + ",");
+                st.Append(Convert.ToChar(34) + "name" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + "Promedio Mensual" + Convert.ToChar(34) + ",");
+                st.Append(Convert.ToChar(34) + "data" + Convert.ToChar(34) + ": [");
+                foreach (var itemDr in rM)
                 {
-                    st.Append("[{");
-                    st.Append(Convert.ToChar(34) + "id" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + (2015).ToString() + Convert.ToChar(34) + ",");
-                    st.Append(Convert.ToChar(34) + "data" + Convert.ToChar(34) + ": [");
-                    foreach (var itemDr in rM)
+                    //st.Append("{");
+                    //st.Append(Convert.ToChar(34) + "name" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + "Horas trabajadas diarias" + Convert.ToChar(34) + ",");
+                    //st.Append(Convert.ToChar(34) + "y" + Convert.ToChar(34) + ":" + itemDr.prom + ",");
+                    //st.Append(Convert.ToChar(34) + "drilldown" + Convert.ToChar(34) + ":" + Convert.ToChar(34)+ itemDr.mes+Convert.ToChar(34));
+
+                    //st.Append("}],{");
+                    //st.Append(Convert.ToChar(34) + "id" + Convert.ToChar(34) + ":" + Convert.ToChar(34) + itemDr.mes + Convert.ToChar(34)+",");
+                    //st.Append(Convert.ToChar(34) + "data" + Convert.ToChar(34) + ": [");
+                    //foreach (var itemDias in registros)
+                    //{
+                    //    var total = (itemDias.hraEntrada.Value - itemDias.hraSalida.Value).TotalHours;
+                    //    st.Append("[");
+                    //    st.Append(Convert.ToChar(34) + itemDias.fechaRegistro.Value.ToShortDateString() + Convert.ToChar(34));
+                    //    st.Append(",");
+                    //    st.Append(total);
+                    //    st.Append("]");
+                    //    st.Append(",");
+                    //}
+                    //st.Length--;
+                    //st.Append("}]},");
+                    //Con este codigo solo trae 1 solo nivel
+                    if (itemDr.prom != 0)
                     {
-
-                        if (itemDr.prom != 0)
-                        {
-
-                                st.Append("[");
-                                st.Append(Convert.ToChar(34) + itemDr.mes + Convert.ToChar(34));
-                                st.Append(",");
-                                st.Append(itemDr.prom);
-                                st.Append("]");
-                                st.Append(",");
-                        }
+                       
+                        st.Append("[");
+                        st.Append(Convert.ToChar(34) + itemDr.mes + Convert.ToChar(34));
+                        st.Append(",");
+                        st.Append(itemDr.prom);
+                        st.Append("]");
+                        st.Append(",");
                     }
 
-                    st.Length--;
-                    st.Append("]}]");
                 }
-                
+                st.Length--;
+                st.Append("]}]");
+
             }
 
+            listaValores.colorByPoint = true;
+            listaValores.name = "Promedio General";
+            listaValores.data = data.ToArray();
             graficaColumna.drillDown = st.ToString();
             //listSeries.Add(new series {
             //    data = new double[] { 8,5 },
@@ -502,7 +510,7 @@ namespace SERVICIOS.Servicios
             };
             CultureInfo ci = new CultureInfo("Es-Es");
             var rCategorias = from i in _Historial.CargaRegistro()
-                              group i by ci.DateTimeFormat.GetMonthName(i.fechaRegistro.Value.Month).ToString() +" " + i.fechaRegistro.Value.Year.ToString()
+                              group i by ci.DateTimeFormat.GetMonthName(i.fechaRegistro.Value.Month).ToString() + " " + i.fechaRegistro.Value.Year.ToString()
                                   into gr
                                   select new
                                   {

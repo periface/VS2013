@@ -51,6 +51,7 @@ namespace SERVICIOS.HighChartsModel //Si se exporta cambiar esta linea
         }
         public bool crosshair { get; set; }
         public labels labels { get; set; }
+        public string type { get; set; }
     }
     public class yAxis {
         public int min { get; set; }

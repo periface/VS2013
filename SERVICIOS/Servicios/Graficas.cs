@@ -75,7 +75,7 @@ namespace SERVICIOS.Servicios
             var graficaColumna = new barModel();
             graficaColumna.chart = new chart()
             {
-                type = "column",
+                type = "line",
                 zoomType = "xy"
             };
 
@@ -107,7 +107,6 @@ namespace SERVICIOS.Servicios
                 text = "Fechas",
 
             };
-            //FIN XAXIS ................ Doero De Bitch Na Kanojotachi ...................  
 
             //YAXIS
             graficaColumna.yAxis.title = new title();
@@ -360,7 +359,7 @@ namespace SERVICIOS.Servicios
             var graficaColumna = new barModel();
             graficaColumna.chart = new chart()
             {
-                type = "column",
+                type = "pie",
                 zoomType = "xy"
             };
 
@@ -433,7 +432,8 @@ namespace SERVICIOS.Servicios
                         name = "Promedio de horas del año " + item.año,
                         drilldown = item.año, //El id del drilldown correspondera al año
                         y = item.prom,
-                        color = "Green"
+                        color = "Green",
+                        
                     });
                 }
                 st.Append("{");
@@ -530,12 +530,14 @@ namespace SERVICIOS.Servicios
                 colorByPoint = true,
                 name = "Promedio General de Horas Trabajadas",
                 data = data.ToArray(),
+                type = "column"
             });
             listaValores.Add(new seriesDataObject()
             {
                 colorByPoint = true,
                 name = "Promedio General de Horas No Trabajadas",
-                data = dataNo.ToArray()
+                data = dataNo.ToArray(),
+                type = "column"
             });
             graficaColumna.drillDown = st.ToString();
             //listSeries.Add(new series {
